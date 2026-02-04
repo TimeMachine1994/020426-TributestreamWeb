@@ -9,7 +9,7 @@ export const MEMORIAL_STATUSES = ['draft', 'scheduled', 'live', 'ended', 'archiv
 export type MemorialStatus = (typeof MEMORIAL_STATUSES)[number];
 
 // Device status enum values
-export const DEVICE_STATUSES = ['connected', 'disconnected', 'streaming'] as const;
+export const DEVICE_STATUSES = ['pending', 'connecting', 'connected', 'disconnected', 'streaming'] as const;
 export type DeviceStatus = (typeof DEVICE_STATUSES)[number];
 
 // ============================================================================
@@ -54,8 +54,10 @@ export const memorial = sqliteTable('memorial', {
 	scheduledAt: integer('scheduled_at', { mode: 'timestamp' }),
 	status: text('status').$type<MemorialStatus>().notNull().default('draft'),
 	funeralDirectorId: text('funeral_director_id').references(() => user.id),
+	assignedVideographerId: text('assigned_videographer_id').references(() => user.id),
 	muxStreamKey: text('mux_stream_key'),
 	muxPlaybackId: text('mux_playback_id'),
+	muxAssetId: text('mux_asset_id'),
 	chatEnabled: integer('chat_enabled', { mode: 'boolean' }).notNull().default(true),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull()
@@ -69,17 +71,44 @@ export type NewMemorial = typeof memorial.$inferInsert;
 // ============================================================================
 export const device = sqliteTable('device', {
 	id: text('id').primaryKey(),
-	sessionToken: text('session_token').notNull().unique(),
-	memorialId: text('memorial_id').references(() => memorial.id),
+	token: text('token').notNull().unique(),
+	memorialId: text('memorial_id')
+		.notNull()
+		.references(() => memorial.id),
 	userId: text('user_id').references(() => user.id),
-	deviceName: text('device_name').notNull(),
-	status: text('status').$type<DeviceStatus>().notNull().default('disconnected'),
+	name: text('name'),
+	type: text('type').$type<'phone' | 'webcam' | 'rtmp'>().default('phone'),
+	status: text('status').$type<DeviceStatus>().notNull().default('pending'),
 	batteryLevel: integer('battery_level'),
-	lastSeen: integer('last_seen', { mode: 'timestamp' })
+	tokenExpiresAt: integer('token_expires_at', { mode: 'timestamp' }).notNull(),
+	connectedAt: integer('connected_at', { mode: 'timestamp' }),
+	lastSeen: integer('last_seen', { mode: 'timestamp' }),
+	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
 });
 
 export type Device = typeof device.$inferSelect;
 export type NewDevice = typeof device.$inferInsert;
+
+// ============================================================================
+// SIGNALING MESSAGES (for WebRTC)
+// ============================================================================
+export const signalingMessage = sqliteTable('signaling_message', {
+	id: text('id').primaryKey(),
+	deviceId: text('device_id')
+		.notNull()
+		.references(() => device.id),
+	memorialId: text('memorial_id')
+		.notNull()
+		.references(() => memorial.id),
+	fromDevice: integer('from_device', { mode: 'boolean' }).notNull(), // true = from phone, false = from switcher
+	type: text('type').$type<'offer' | 'answer' | 'ice-candidate'>().notNull(),
+	payload: text('payload').notNull(), // JSON stringified SDP or ICE candidate
+	consumed: integer('consumed', { mode: 'boolean' }).notNull().default(false),
+	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
+});
+
+export type SignalingMessage = typeof signalingMessage.$inferSelect;
+export type NewSignalingMessage = typeof signalingMessage.$inferInsert;
 
 // ============================================================================
 // AUDIT LOG (for SOC2 compliance)

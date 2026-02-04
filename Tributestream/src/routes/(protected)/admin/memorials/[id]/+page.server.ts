@@ -1,59 +1,79 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, redirect, error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
-import { generateId } from '$lib/server/auth';
 import { eq } from 'drizzle-orm';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ params }) => {
+	const [memorial] = await db
+		.select()
+		.from(table.memorial)
+		.where(eq(table.memorial.id, params.id));
+
+	if (!memorial) {
+		throw error(404, 'Memorial not found');
+	}
+
 	const videographers = await db
 		.select({ id: table.user.id, username: table.user.username })
 		.from(table.user)
 		.where(eq(table.user.role, 'videographer'));
 
-	return { videographers };
+	return {
+		memorial: {
+			...memorial,
+			scheduledAt: memorial.scheduledAt?.toISOString().slice(0, 16) ?? null,
+			createdAt: memorial.createdAt.toISOString(),
+			updatedAt: memorial.updatedAt.toISOString()
+		},
+		videographers
+	};
 };
 
 export const actions: Actions = {
-	default: async ({ request, locals }) => {
+	update: async ({ request, params }) => {
 		const formData = await request.formData();
 		const title = formData.get('title') as string;
 		const slug = formData.get('slug') as string;
 		const description = formData.get('description') as string | null;
 		const scheduledAtStr = formData.get('scheduledAt') as string | null;
 		const assignedVideographerId = formData.get('assignedVideographerId') as string | null;
+		const status = formData.get('status') as string;
 		const chatEnabled = formData.get('chatEnabled') === 'on';
 
 		if (!title || !slug) {
 			return fail(400, { error: 'Title and slug are required' });
 		}
 
-		// Validate slug format
 		if (!/^[a-z0-9-]+$/.test(slug)) {
 			return fail(400, { error: 'Slug can only contain lowercase letters, numbers, and hyphens' });
 		}
 
-		const now = new Date();
 		const scheduledAt = scheduledAtStr ? new Date(scheduledAtStr) : null;
 
 		try {
-			await db.insert(table.memorial).values({
-				id: generateId(),
-				slug,
-				title,
-				description: description || null,
-				scheduledAt,
-				status: scheduledAt ? 'scheduled' : 'draft',
-				funeralDirectorId: locals.user?.id || null,
-				assignedVideographerId: assignedVideographerId || null,
-				chatEnabled,
-				createdAt: now,
-				updatedAt: now
-			});
+			await db
+				.update(table.memorial)
+				.set({
+					title,
+					slug,
+					description: description || null,
+					scheduledAt,
+					status: status as table.MemorialStatus,
+					assignedVideographerId: assignedVideographerId || null,
+					chatEnabled,
+					updatedAt: new Date()
+				})
+				.where(eq(table.memorial.id, params.id));
 		} catch (e) {
 			return fail(400, { error: 'A memorial with this slug already exists' });
 		}
 
+		throw redirect(303, '/admin/memorials');
+	},
+
+	delete: async ({ params }) => {
+		await db.delete(table.memorial).where(eq(table.memorial.id, params.id));
 		throw redirect(303, '/admin/memorials');
 	}
 };
