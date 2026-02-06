@@ -1,11 +1,13 @@
 <script lang="ts">
-	import QRCodeModal from '$lib/components/QRCodeModal.svelte';
+	import AddCameraModal from '$lib/components/AddCameraModal.svelte';
 	import DeviceStream from '$lib/components/DeviceStream.svelte';
 	import type { ConnectionState } from '$lib/webrtc/peer';
 
 	let { data } = $props();
 
-	let showQRModal = $state(false);
+	let showAddCamera = $state(false);
+	let localStreams = $state<Array<{ id: string; stream: MediaStream; label: string }>>([]);
+	let localIdCounter = $state(0);
 	let selectedSource = $state<string | null>(null);
 	let programSource = $state<string | null>(null);
 	let deviceStates = $state<Map<string, ConnectionState>>(new Map());
@@ -35,6 +37,23 @@
 
 	function getDeviceState(deviceId: string): ConnectionState {
 		return deviceStates.get(deviceId) ?? 'new';
+	}
+
+	function handleLocalStream(stream: MediaStream, label: string) {
+		const id = `local-${localIdCounter++}`;
+		localStreams = [...localStreams, { id, stream, label }];
+	}
+
+	function srcObject(node: HTMLVideoElement, stream: MediaStream) {
+		node.srcObject = stream;
+		return {
+			update(newStream: MediaStream) {
+				node.srcObject = newStream;
+			},
+			destroy() {
+				node.srcObject = null;
+			}
+		};
 	}
 
 	let isStreamLoading = $state(false);
@@ -231,9 +250,35 @@
 						</button>
 					{/each}
 
+					<!-- Local Camera Sources -->
+					{#each localStreams as local}
+						<button
+							onclick={() => selectSource(local.id)}
+							class="relative aspect-video overflow-hidden rounded border-2 bg-gray-800 transition {selectedSource === local.id
+								? 'border-green-500'
+								: programSource === local.id
+									? 'border-red-500'
+									: 'border-gray-600 hover:border-gray-500'}"
+						>
+							<video
+								autoplay
+								playsinline
+								muted
+								class="h-full w-full object-cover"
+								use:srcObject={local.stream}
+							></video>
+							<div class="absolute bottom-1 left-1 rounded bg-gray-900/80 px-1.5 py-0.5 text-xs">
+								{local.label}
+							</div>
+							<div class="absolute top-1 right-1 rounded bg-indigo-600/80 px-1.5 py-0.5 text-xs">
+								Local
+							</div>
+						</button>
+					{/each}
+
 					<!-- Add Device Slot -->
 					<button
-						onclick={() => (showQRModal = true)}
+						onclick={() => (showAddCamera = true)}
 						class="flex aspect-video items-center justify-center rounded border-2 border-dashed border-gray-600 bg-gray-800/50 transition hover:border-gray-500 hover:bg-gray-800"
 					>
 						<div class="text-center">
@@ -258,7 +303,7 @@
 					{#if data.devices.length === 0}
 						<p class="text-sm text-gray-500">No devices connected.</p>
 						<button
-							onclick={() => (showQRModal = true)}
+							onclick={() => (showAddCamera = true)}
 							class="mt-2 w-full rounded bg-indigo-600 px-3 py-2 text-sm font-medium hover:bg-indigo-500"
 						>
 							Add Camera
@@ -276,7 +321,7 @@
 							</div>
 						{/each}
 						<button
-							onclick={() => (showQRModal = true)}
+							onclick={() => (showAddCamera = true)}
 							class="w-full rounded border border-gray-600 px-3 py-2 text-sm hover:bg-gray-700"
 						>
 							+ Add Another
@@ -331,6 +376,10 @@
 	</div>
 </div>
 
-{#if showQRModal}
-	<QRCodeModal memorialId={data.memorial.id} onClose={() => (showQRModal = false)} />
+{#if showAddCamera}
+	<AddCameraModal
+		memorialId={data.memorial.id}
+		onClose={() => (showAddCamera = false)}
+		onLocalStream={handleLocalStream}
+	/>
 {/if}

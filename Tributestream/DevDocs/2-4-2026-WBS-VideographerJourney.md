@@ -1,14 +1,14 @@
 # Videographer Journey - Work Breakdown Structure
 
-**Last Updated:** February 4, 2026  
-**Status:** ✅ Phase 1-8 Complete  
+**Last Updated:** February 6, 2026  
+**Status:** ✅ Phase 1-9 Complete  
 **Dev Server:** http://localhost:5176
 
 ---
 
 ## Overview
 
-The Videographer Journey enables multi-device livestream production for memorial services. Videographers can pair multiple phone cameras via QR code, manage sources in a switcher console, and broadcast to Mux for live streaming.
+The Videographer Journey enables multi-device livestream production for memorial services. Videographers can pair multiple phone cameras via QR code or use local device cameras, manage sources in a switcher console, and broadcast to Mux for live streaming.
 
 ---
 
@@ -79,9 +79,10 @@ The Videographer Journey enables multi-device livestream production for memorial
 - Header with memorial info, status badge, GO LIVE / END STREAM buttons
 - Preview monitor (green border) with TAKE button
 - Program monitor (red border) with LIVE indicator
-- Source thumbnails grid (4 columns)
+- Source thumbnails grid (4 columns) with local camera sources ("Local" badge)
 - Right sidebar: device list, stream info, edit link
-- QR code modal trigger
+- Add Camera modal trigger (choose between QR pairing or local camera)
+- `srcObject` Svelte action for rendering local `MediaStream` in source grid
 
 ---
 
@@ -92,10 +93,10 @@ The Videographer Journey enables multi-device livestream production for memorial
 |------|------|-------------|
 | 4.1 | `src/routes/api/devices/create-token/+server.ts` | Generate device token (5-min expiry) |
 | 4.2 | `src/routes/api/devices/validate/+server.ts` | Validate token, return memorial info |
-| 4.3 | `src/lib/components/QRCodeModal.svelte` | QR code display with countdown, auto-refresh |
+| 4.3 | `src/lib/components/QRCodeModal.svelte` | QR code display with countdown, auto-refresh (legacy, replaced by AddCameraModal) |
 
 **Token Flow:**
-1. Videographer clicks "Add Camera" → POST `/api/devices/create-token`
+1. Videographer clicks "Add Camera" → chooser modal → selects "Scan QR Code" → POST `/api/devices/create-token`
 2. Token stored in `device` table with `pending` status
 3. QR code encodes: `{origin}/camera?token={token}`
 4. Phone scans → validates → status updates to `connecting`
@@ -170,6 +171,29 @@ The Videographer Journey enables multi-device livestream production for memorial
 
 ---
 
+### ✅ 9.0 Add Camera Modal (Local Camera Support)
+**Status:** Complete
+
+| Task | File | Description |
+|------|------|-------------|
+| 9.1 | `src/lib/components/AddCameraModal.svelte` | 3-mode modal: choose → QR code / local camera |
+| 9.2 | `src/routes/(protected)/switcher/[memorialId]/+page.svelte` | Updated to use AddCameraModal, handle local streams, render local sources in grid |
+
+**Modal Modes:**
+- **`choose`** — Landing screen with two options: "Scan QR Code" or "Use Local Camera"
+- **`qr`** — Existing QR code token generation flow (token only created on selection)
+- **`local`** — Camera preview with device selector (`enumerateDevices`), "Use This Camera" confirmation
+
+**Features:**
+- Back button navigation between modes
+- Device enumeration dropdown for multi-camera devices
+- Live camera preview before confirming
+- `onLocalStream` callback passes `MediaStream` + label to parent switcher
+- Local streams rendered in source grid with "Local" badge
+- Lazy token generation (no wasted tokens when using local camera)
+
+---
+
 ## Database Schema
 
 ### Tables Created/Modified
@@ -229,8 +253,9 @@ MUX_TOKEN_SECRET=your-mux-token-secret
 src/
 ├── lib/
 │   ├── components/
+│   │   ├── AddCameraModal.svelte    # Add camera chooser (QR / local)
 │   │   ├── DeviceStream.svelte      # WebRTC video receiver
-│   │   └── QRCodeModal.svelte       # QR code pairing modal
+│   │   └── QRCodeModal.svelte       # QR code pairing modal (legacy)
 │   ├── server/
 │   │   ├── auth.ts                  # Session management
 │   │   ├── db/
@@ -278,6 +303,11 @@ src/
 - [ ] GO LIVE creates Mux stream and updates status
 - [ ] END STREAM updates status to ended
 - [ ] Playback URL works for viewers
+- [ ] Add Camera modal shows choose screen with QR and Local options
+- [ ] Local camera preview displays correctly in modal
+- [ ] Device selector works for multi-camera devices
+- [ ] Confirmed local camera appears in source grid with "Local" badge
+- [ ] Local camera source is selectable for preview/program
 
 ---
 
