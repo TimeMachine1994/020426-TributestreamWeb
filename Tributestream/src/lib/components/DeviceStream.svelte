@@ -7,9 +7,10 @@
 		memorialId: string;
 		deviceName?: string;
 		onConnectionChange?: (state: ConnectionState) => void;
+		onStream?: (stream: MediaStream) => void;
 	}
 
-	let { deviceId, memorialId, deviceName = 'Camera', onConnectionChange }: Props = $props();
+	let { deviceId, memorialId, deviceName = 'Camera', onConnectionChange, onStream }: Props = $props();
 
 	let videoElement: HTMLVideoElement | undefined = $state();
 	let connectionState: ConnectionState = $state('new');
@@ -28,6 +29,7 @@
 				if (videoElement) {
 					videoElement.srcObject = stream;
 				}
+				onStream?.(stream);
 			}
 		});
 

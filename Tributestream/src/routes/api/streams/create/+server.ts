@@ -35,6 +35,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return json({
 			streamKey: memorial.muxStreamKey,
 			playbackId: memorial.muxPlaybackId,
+			whipEndpoint: `https://global-live.mux.com/app/${memorial.muxStreamKey}/whip`,
 			alreadyExists: true
 		});
 	}
@@ -60,6 +61,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	return json({
 		streamKey: result.streamKey,
 		playbackId: result.playbackId,
+		whipEndpoint: result.whipEndpoint,
 		alreadyExists: false
 	});
 };

@@ -1,16 +1,30 @@
 <script lang="ts">
+	import { onMount, onDestroy } from 'svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 	import AddCameraModal from '$lib/components/AddCameraModal.svelte';
+	import CompositorCanvas from '$lib/components/CompositorCanvas.svelte';
 	import DeviceStream from '$lib/components/DeviceStream.svelte';
 	import type { ConnectionState } from '$lib/webrtc/peer';
+	import { SourceManager } from '$lib/compositor/SourceManager.svelte';
+	import { Compositor } from '$lib/compositor/Compositor.svelte';
+	import { WhipClient, type WhipConnectionState } from '$lib/compositor/WhipClient';
+	import { AudioMixer } from '$lib/compositor/AudioMixer';
+	import type { TransitionType } from '$lib/compositor/types';
 
 	let { data } = $props();
 
+	// --- Compositor setup ---
+	const sourceManager = new SourceManager();
+	const compositor = new Compositor(sourceManager);
+	const audioMixer = new AudioMixer();
+	let whipClient: WhipClient | null = null;
+	let whipState = $state<WhipConnectionState>('disconnected');
+
 	let showAddCamera = $state(false);
-	let localStreams = $state<Array<{ id: string; stream: MediaStream; label: string }>>([]);
 	let localIdCounter = $state(0);
-	let selectedSource = $state<string | null>(null);
-	let programSource = $state<string | null>(null);
-	let deviceStates = $state<Map<string, ConnectionState>>(new Map());
+	let transitionType = $state<TransitionType>('cut');
+	let transitionDuration = $state(500);
+	let deviceStates = new SvelteMap<string, ConnectionState>();
 
 	const statusColors: Record<string, string> = {
 		draft: 'bg-gray-600',
@@ -20,28 +34,37 @@
 		archived: 'bg-gray-600'
 	};
 
-	function selectSource(deviceId: string) {
-		selectedSource = deviceId;
+	// Derived state
+	let selectedSourceId = $derived(sourceManager.activePreview);
+	let programSourceId = $derived(sourceManager.activeProgram);
+	let allSources = $derived(sourceManager.sourceList);
+
+	function selectSource(id: string) {
+		sourceManager.setPreview(id);
 	}
 
 	function takeToProgram() {
-		if (selectedSource) {
-			programSource = selectedSource;
-		}
+		compositor.takeToProgram(transitionType, transitionDuration);
 	}
 
 	function handleDeviceConnection(deviceId: string, state: ConnectionState) {
 		deviceStates.set(deviceId, state);
-		deviceStates = deviceStates; // trigger reactivity
+		sourceManager.updateConnectionState(deviceId, state === 'connected');
 	}
 
-	function getDeviceState(deviceId: string): ConnectionState {
-		return deviceStates.get(deviceId) ?? 'new';
+	function handleDeviceStream(deviceId: string, stream: MediaStream, label: string) {
+		// Register WebRTC device stream with SourceManager for compositing
+		if (!sourceManager.getSource(deviceId)) {
+			sourceManager.addSource(deviceId, stream, label, 'webrtc');
+		}
+		// Connect audio track to mixer
+		audioMixer.connectSource(deviceId, stream);
 	}
 
 	function handleLocalStream(stream: MediaStream, label: string) {
 		const id = `local-${localIdCounter++}`;
-		localStreams = [...localStreams, { id, stream, label }];
+		sourceManager.addSource(id, stream, label, 'local');
+		audioMixer.connectSource(id, stream);
 	}
 
 	function srcObject(node: HTMLVideoElement, stream: MediaStream) {
@@ -56,16 +79,38 @@
 		};
 	}
 
+	// --- Overlay controls ---
+	let lowerThirdText = $state('');
+	let lowerThirdVisible = $state(false);
+	const overlayManager = compositor.getOverlayManager();
+
+	function toggleLowerThird() {
+		if (!lowerThirdVisible) {
+			overlayManager.addTextOverlay('lower-third', lowerThirdText || 'Lower Third', 50, 620, {
+				font: 'bold 28px Arial',
+				color: '#ffffff',
+				backgroundColor: 'rgba(0, 0, 0, 0.7)'
+			});
+			overlayManager.show('lower-third');
+			lowerThirdVisible = true;
+		} else {
+			overlayManager.hide('lower-third');
+			lowerThirdVisible = false;
+		}
+	}
+
+	// --- Stream controls ---
 	let isStreamLoading = $state(false);
 	let streamError = $state<string | null>(null);
-	let currentStatus = $state(data.memorial.status);
+	let statusOverride = $state<string | null>(null);
+	let currentStatus = $derived(statusOverride ?? data.memorial.status);
 
 	async function goLive() {
 		isStreamLoading = true;
 		streamError = null;
 
 		try {
-			// First ensure stream is created
+			// First ensure Mux stream is created
 			const createResponse = await fetch('/api/streams/create', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -77,7 +122,10 @@
 				throw new Error(err.message || 'Failed to create stream');
 			}
 
-			// Then go live
+			// Get WHIP endpoint from response
+			const createData = await createResponse.json();
+
+			// Then go live on server
 			const liveResponse = await fetch('/api/streams/go-live', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -89,7 +137,26 @@
 				throw new Error(err.message || 'Failed to go live');
 			}
 
-			currentStatus = 'live';
+			// Initialize audio mixer and get mixed audio stream
+			const audioStream = audioMixer.initialize();
+
+			// Get compositor video output and combine with audio
+			const videoStream = compositor.outputStream;
+			if (!videoStream) {
+				throw new Error('Compositor output stream not available');
+			}
+
+			const combinedStream = AudioMixer.combineStreams(videoStream, audioStream);
+
+			// Connect to Mux via WHIP
+			if (createData.whipEndpoint) {
+				whipClient = new WhipClient((state) => {
+					whipState = state;
+				});
+				await whipClient.connect(combinedStream, createData.whipEndpoint);
+			}
+
+			statusOverride = 'live';
 		} catch (e) {
 			streamError = e instanceof Error ? e.message : 'An error occurred';
 		} finally {
@@ -102,6 +169,12 @@
 		streamError = null;
 
 		try {
+			// Disconnect WHIP client first
+			if (whipClient) {
+				await whipClient.disconnect();
+				whipClient = null;
+			}
+
 			const response = await fetch('/api/streams/end', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -113,13 +186,24 @@
 				throw new Error(err.message || 'Failed to end stream');
 			}
 
-			currentStatus = 'ended';
+			statusOverride = 'ended';
 		} catch (e) {
 			streamError = e instanceof Error ? e.message : 'An error occurred';
 		} finally {
 			isStreamLoading = false;
 		}
 	}
+
+	onMount(() => {
+		compositor.start();
+	});
+
+	onDestroy(() => {
+		whipClient?.disconnect();
+		audioMixer.destroy();
+		compositor.destroy();
+		sourceManager.destroy();
+	});
 </script>
 
 <div class="flex h-screen flex-col bg-gray-900 text-white">
@@ -135,6 +219,22 @@
 		<div class="flex items-center gap-4">
 			{#if streamError}
 				<span class="text-xs text-red-400">{streamError}</span>
+			{/if}
+			{#if whipState === 'connecting'}
+				<span class="flex items-center gap-1 text-xs text-yellow-400">
+					<span class="h-2 w-2 animate-pulse rounded-full bg-yellow-400"></span>
+					WHIP Connecting
+				</span>
+			{:else if whipState === 'connected'}
+				<span class="flex items-center gap-1 text-xs text-green-400">
+					<span class="h-2 w-2 rounded-full bg-green-400"></span>
+					WHIP
+				</span>
+			{:else if whipState === 'failed'}
+				<span class="flex items-center gap-1 text-xs text-red-400">
+					<span class="h-2 w-2 rounded-full bg-red-400"></span>
+					WHIP Failed
+				</span>
 			{/if}
 			<span class="rounded px-2 py-1 text-xs font-medium {statusColors[currentStatus]}">
 				{currentStatus.toUpperCase()}
@@ -171,24 +271,30 @@
 				<div class="flex flex-col">
 					<div class="mb-2 flex items-center justify-between">
 						<span class="text-xs font-medium uppercase tracking-wider text-gray-400">Preview</span>
-						<button
-							onclick={takeToProgram}
-							disabled={!selectedSource}
-							class="rounded bg-indigo-600 px-3 py-1 text-xs font-medium hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
-						>
-							TAKE →
-						</button>
-					</div>
-					<div
-						class="relative flex-1 rounded-lg border-2 border-green-500 bg-black"
-					>
-						<div class="absolute inset-0 flex items-center justify-center">
-							{#if selectedSource}
-								<span class="text-sm text-gray-400">Preview: {selectedSource}</span>
-							{:else}
-								<span class="text-sm text-gray-500">Select a source</span>
-							{/if}
+						<div class="flex items-center gap-2">
+							<select
+								bind:value={transitionType}
+								class="rounded bg-gray-700 px-2 py-1 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+							>
+								<option value="cut">CUT</option>
+								<option value="fade">FADE</option>
+							</select>
+							<button
+								onclick={takeToProgram}
+								disabled={!selectedSourceId}
+								class="rounded bg-indigo-600 px-3 py-1 text-xs font-medium hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								TAKE →
+							</button>
 						</div>
+					</div>
+					<div class="relative flex-1 rounded-lg border-2 border-green-500 bg-black">
+						<CompositorCanvas {compositor} mode="preview" />
+						{#if !selectedSourceId}
+							<div class="absolute inset-0 flex items-center justify-center">
+								<span class="text-sm text-gray-500">Select a source</span>
+							</div>
+						{/if}
 						<div class="absolute bottom-2 left-2 rounded bg-green-600 px-2 py-0.5 text-xs font-medium">
 							PVW
 						</div>
@@ -199,23 +305,20 @@
 				<div class="flex flex-col">
 					<div class="mb-2 flex items-center justify-between">
 						<span class="text-xs font-medium uppercase tracking-wider text-gray-400">Program</span>
-						{#if data.memorial.status === 'live'}
+						{#if currentStatus === 'live'}
 							<span class="flex items-center gap-1 text-xs text-red-500">
 								<span class="h-2 w-2 animate-pulse rounded-full bg-red-500"></span>
 								LIVE
 							</span>
 						{/if}
 					</div>
-					<div
-						class="relative flex-1 rounded-lg border-2 border-red-500 bg-black"
-					>
-						<div class="absolute inset-0 flex items-center justify-center">
-							{#if programSource}
-								<span class="text-sm text-gray-400">Program: {programSource}</span>
-							{:else}
+					<div class="relative flex-1 rounded-lg border-2 border-red-500 bg-black">
+						<CompositorCanvas {compositor} mode="program" showFps={true} />
+						{#if !programSourceId}
+							<div class="absolute inset-0 flex items-center justify-center">
 								<span class="text-sm text-gray-500">No program source</span>
-							{/if}
-						</div>
+							</div>
+						{/if}
 						<div class="absolute bottom-2 left-2 rounded bg-red-600 px-2 py-0.5 text-xs font-medium">
 							PGM
 						</div>
@@ -225,14 +328,20 @@
 
 			<!-- Source Thumbnails (Multiviewer) -->
 			<div class="mt-4">
-				<div class="mb-2 text-xs font-medium uppercase tracking-wider text-gray-400">Sources</div>
+				<div class="mb-2 flex items-center justify-between">
+					<span class="text-xs font-medium uppercase tracking-wider text-gray-400">Sources ({allSources.length})</span>
+					{#if compositor.isRunning}
+						<span class="text-xs text-gray-500">{compositor.measuredFps} fps</span>
+					{/if}
+				</div>
 				<div class="grid grid-cols-4 gap-2">
-					{#each data.devices as device}
+					<!-- WebRTC Device Sources -->
+					{#each data.devices as device (device.id)}
 						<button
 							onclick={() => selectSource(device.id)}
-							class="relative aspect-video overflow-hidden rounded border-2 bg-gray-800 transition {selectedSource === device.id
+							class="relative aspect-video overflow-hidden rounded border-2 bg-gray-800 transition {selectedSourceId === device.id
 								? 'border-green-500'
-								: programSource === device.id
+								: programSourceId === device.id
 									? 'border-red-500'
 									: 'border-gray-600 hover:border-gray-500'}"
 						>
@@ -241,6 +350,7 @@
 								memorialId={data.memorial.id}
 								deviceName={device.name ?? 'Camera'}
 								onConnectionChange={(state) => handleDeviceConnection(device.id, state)}
+								onStream={(stream) => handleDeviceStream(device.id, stream, device.name ?? 'Camera')}
 							/>
 							{#if device.batteryLevel !== null}
 								<div class="absolute bottom-1 right-1 rounded bg-gray-900/80 px-1.5 py-0.5 text-xs">
@@ -250,13 +360,13 @@
 						</button>
 					{/each}
 
-					<!-- Local Camera Sources -->
-					{#each localStreams as local}
+					<!-- Local Camera Sources (from SourceManager) -->
+					{#each allSources.filter(s => s.type === 'local') as source (source.id)}
 						<button
-							onclick={() => selectSource(local.id)}
-							class="relative aspect-video overflow-hidden rounded border-2 bg-gray-800 transition {selectedSource === local.id
+							onclick={() => selectSource(source.id)}
+							class="relative aspect-video overflow-hidden rounded border-2 bg-gray-800 transition {selectedSourceId === source.id
 								? 'border-green-500'
-								: programSource === local.id
+								: programSourceId === source.id
 									? 'border-red-500'
 									: 'border-gray-600 hover:border-gray-500'}"
 						>
@@ -265,10 +375,10 @@
 								playsinline
 								muted
 								class="h-full w-full object-cover"
-								use:srcObject={local.stream}
+								use:srcObject={source.stream}
 							></video>
 							<div class="absolute bottom-1 left-1 rounded bg-gray-900/80 px-1.5 py-0.5 text-xs">
-								{local.label}
+								{source.label}
 							</div>
 							<div class="absolute top-1 right-1 rounded bg-indigo-600/80 px-1.5 py-0.5 text-xs">
 								Local
@@ -309,7 +419,7 @@
 							Add Camera
 						</button>
 					{:else}
-						{#each data.devices as device}
+						{#each data.devices as device (device.id)}
 							<div class="flex items-center justify-between rounded bg-gray-700 px-3 py-2">
 								<div class="flex items-center gap-2">
 									<span class="h-2 w-2 rounded-full {device.status === 'connected' ? 'bg-green-500' : 'bg-gray-500'}"></span>
@@ -350,6 +460,34 @@
 							</span>
 						</div>
 					{/if}
+				</div>
+			</div>
+
+			<!-- Overlay Controls -->
+			<div class="border-b border-gray-700 p-4">
+				<h2 class="text-sm font-semibold uppercase tracking-wider text-gray-400">Overlays</h2>
+				<div class="mt-3 space-y-3">
+					<!-- Lower Third -->
+					<div>
+						<label for="lower-third-text" class="mb-1 block text-xs text-gray-400">Lower Third</label>
+						<input
+							id="lower-third-text"
+							type="text"
+							placeholder="Enter text..."
+							bind:value={lowerThirdText}
+							class="w-full rounded bg-gray-700 px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+						/>
+						<div class="mt-2 flex gap-2">
+							<button
+								onclick={toggleLowerThird}
+								class="flex-1 rounded px-2 py-1 text-xs font-medium {lowerThirdVisible
+									? 'bg-green-600 hover:bg-green-500'
+									: 'bg-gray-600 hover:bg-gray-500'}"
+							>
+								{lowerThirdVisible ? 'HIDE' : 'SHOW'}
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 
