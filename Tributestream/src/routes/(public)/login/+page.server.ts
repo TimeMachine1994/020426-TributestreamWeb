@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ request, cookies }) => {
+	default: async ({ request, cookies, url }) => {
 		const formData = await request.formData();
 		const username = formData.get('username') as string;
 		const password = formData.get('password') as string;
@@ -49,6 +49,7 @@ export const actions: Actions = {
 
 		auth.setSessionTokenCookie({ cookies } as any, sessionToken, session.expiresAt);
 
-		throw redirect(303, '/dashboard');
+		const redirectTo = url.searchParams.get('redirectTo') || '/dashboard';
+		throw redirect(303, redirectTo);
 	}
 };

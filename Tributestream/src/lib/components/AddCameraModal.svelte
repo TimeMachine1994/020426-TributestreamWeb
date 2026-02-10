@@ -8,9 +8,14 @@
 		memorialId: string;
 		onClose: () => void;
 		onLocalStream: (stream: MediaStream, label: string) => void;
+		onDeviceReady?: (deviceId: string) => void;
 	}
 
-	let { memorialId, onClose, onLocalStream }: Props = $props();
+	let { memorialId, onClose, onLocalStream, onDeviceReady }: Props = $props();
+
+	// --- Device polling state ---
+	let deviceId = $state<string | null>(null);
+	let pollInterval: ReturnType<typeof setInterval> | null = null;
 
 	let mode = $state<Mode>('choose');
 
@@ -34,10 +39,12 @@
 
 	// --- QR Code functions ---
 	async function generateToken() {
+		console.log('[AddCameraModal] generateToken() called for memorialId:', memorialId);
 		loading = true;
 		error = null;
 
 		try {
+			console.log('[AddCameraModal] Fetching /api/devices/create-token...');
 			const response = await fetch('/api/devices/create-token', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -50,10 +57,31 @@
 			}
 
 			const data = await response.json();
+			console.log('[AddCameraModal] Token received:', data.token?.substring(0, 8) + '...');
+			console.log('[AddCameraModal] Token expires at:', data.expiresAt);
+			console.log('[AddCameraModal] Device ID:', data.deviceId);
 			token = data.token;
 			expiresAt = new Date(data.expiresAt);
+			deviceId = data.deviceId;
+			
+			// Start polling to check if phone has connected
+			startDevicePolling();
 
-			const cameraUrl = `${window.location.origin}/camera?token=${token}`;
+			// Use network IP instead of localhost so phones can connect
+			// Also ensure HTTPS is used since camera requires secure context
+			let origin = window.location.origin;
+			
+			// Force HTTPS for camera access (required for getUserMedia)
+			origin = origin.replace('http://', 'https://');
+			
+			if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+				const networkIp = document.querySelector('meta[name="network-ip"]')?.getAttribute('content');
+				if (networkIp) {
+					origin = `https://${networkIp}:${window.location.port}`;
+				}
+			}
+			const cameraUrl = `${origin}/camera?token=${token}`;
+			console.log('[AddCameraModal] QR Code URL:', cameraUrl);
 			qrCodeDataUrl = await QRCode.toDataURL(cameraUrl, {
 				width: 256,
 				margin: 2,
@@ -63,6 +91,7 @@
 				}
 			});
 		} catch (e) {
+			console.error('[AddCameraModal] Token generation error:', e);
 			error = e instanceof Error ? e.message : 'An error occurred';
 		} finally {
 			loading = false;
@@ -85,6 +114,36 @@
 		timerInterval = setInterval(updateTimeRemaining, 1000);
 	}
 
+	function startDevicePolling() {
+		if (pollInterval) clearInterval(pollInterval);
+		
+		pollInterval = setInterval(async () => {
+			if (!deviceId) return;
+			
+			try {
+				const response = await fetch(`/api/devices/${deviceId}/status`);
+				if (response.ok) {
+					const data = await response.json();
+					console.log('[AddCameraModal] Device status poll:', data.status);
+					if (data.status === 'connecting' || data.status === 'connected') {
+						console.log('[AddCameraModal] Device ready, notifying parent');
+						onDeviceReady?.(deviceId);
+						stopDevicePolling();
+					}
+				}
+			} catch (e) {
+				console.error('[AddCameraModal] Device poll error:', e);
+			}
+		}, 2000); // Poll every 2 seconds
+	}
+
+	function stopDevicePolling() {
+		if (pollInterval) {
+			clearInterval(pollInterval);
+			pollInterval = null;
+		}
+	}
+
 	function formatTime(seconds: number): string {
 		const mins = Math.floor(seconds / 60);
 		const secs = seconds % 60;
@@ -105,6 +164,7 @@
 	}
 
 	async function startLocalCamera() {
+		console.log('[AddCameraModal] startLocalCamera() called');
 		localLoading = true;
 		localError = null;
 
@@ -120,6 +180,9 @@
 			}
 
 			localStream = await navigator.mediaDevices.getUserMedia(constraints);
+			console.log('[AddCameraModal] Local stream acquired:', localStream.id);
+			console.log('[AddCameraModal] Video tracks:', localStream.getVideoTracks().length);
+			console.log('[AddCameraModal] Audio tracks:', localStream.getAudioTracks().length);
 
 			// Re-enumerate to get labels (available after permission granted)
 			await enumerateVideoDevices();
@@ -152,7 +215,9 @@
 	}
 
 	function confirmLocalCamera() {
+		console.log('[AddCameraModal] confirmLocalCamera() called');
 		if (localStream) {
+			console.log('[AddCameraModal] Passing stream to parent:', localStream.id, 'label:', cameraLabel);
 			onLocalStream(localStream, cameraLabel);
 			onClose();
 		}
@@ -167,23 +232,27 @@
 
 	// --- Mode transitions ---
 	function selectQR() {
+		console.log('[AddCameraModal] Mode changed to: qr');
 		mode = 'qr';
 		generateToken();
 		startTimer();
 	}
 
 	function selectLocal() {
+		console.log('[AddCameraModal] Mode changed to: local');
 		mode = 'local';
 		startLocalCamera();
 	}
 
 	function goBack() {
 		stopLocalStream();
+		stopDevicePolling();
 		if (timerInterval) clearInterval(timerInterval);
 		mode = 'choose';
 		// Reset QR state
 		qrCodeDataUrl = null;
 		token = null;
+		deviceId = null;
 		error = null;
 		loading = false;
 		expiresAt = null;
@@ -195,12 +264,14 @@
 
 	function handleClose() {
 		stopLocalStream();
+		stopDevicePolling();
 		if (timerInterval) clearInterval(timerInterval);
 		onClose();
 	}
 
 	onDestroy(() => {
 		if (timerInterval) clearInterval(timerInterval);
+		stopDevicePolling();
 		// Don't stop stream here — it may have been handed off via onLocalStream
 	});
 </script>

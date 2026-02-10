@@ -31,11 +31,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	// Check if stream already exists
+	const livekitRoomName = `memorial-${memorialId}`;
+
 	if (memorial.muxStreamKey) {
 		return json({
 			streamKey: memorial.muxStreamKey,
 			playbackId: memorial.muxPlaybackId,
-			whipEndpoint: `https://global-live.mux.com/app/${memorial.muxStreamKey}/whip`,
+			livekitRoomName,
 			alreadyExists: true
 		});
 	}
@@ -54,6 +56,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			muxStreamKey: result.streamKey,
 			muxPlaybackId: result.playbackId,
 			muxAssetId: result.liveStreamId,
+			livekitRoomName,
 			updatedAt: new Date()
 		})
 		.where(eq(table.memorial.id, memorialId));
@@ -61,7 +64,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	return json({
 		streamKey: result.streamKey,
 		playbackId: result.playbackId,
-		whipEndpoint: result.whipEndpoint,
+		livekitRoomName,
 		alreadyExists: false
 	});
 };

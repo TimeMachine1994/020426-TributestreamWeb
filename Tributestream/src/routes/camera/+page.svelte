@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { WebRTCPeer } from '$lib/webrtc/peer';
+	import { LiveKitRoom } from '$lib/livekit/client';
 
 	let videoElement: HTMLVideoElement | undefined = $state();
 	let stream: MediaStream | null = $state(null);
@@ -12,11 +12,21 @@
 	let deviceId: string | null = $state(null);
 	let memorial: { id: string; title: string; slug: string } | null = $state(null);
 	let facingMode: 'environment' | 'user' = $state('environment');
-	let peer: WebRTCPeer | null = null;
+	let livekitRoom: LiveKitRoom | null = null;
+	let livekitCreds: { token: string; url: string; roomName: string } | null = null;
 
 	const token = $derived($page.url.searchParams.get('token'));
 
+	// Reactive effect to attach stream to video element when both are available
+	$effect(() => {
+		if (videoElement && stream) {
+			console.log('[CameraPage] $effect: Attaching stream to video element');
+			videoElement.srcObject = stream;
+		}
+	});
+
 	async function validateToken() {
+		console.log('[CameraPage] validateToken() called, token:', token?.substring(0, 8) + '...');
 		if (!token) {
 			error = 'No session token provided. Scan the QR code from the Switcher console.';
 			return false;
@@ -25,6 +35,7 @@
 		connectionStatus = 'validating';
 
 		try {
+			console.log('[CameraPage] Fetching /api/devices/validate...');
 			const response = await fetch('/api/devices/validate', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -38,17 +49,42 @@
 			}
 
 			const data = await response.json();
+			console.log('[CameraPage] Validation successful!');
+			console.log('[CameraPage] Device ID:', data.deviceId);
+			console.log('[CameraPage] Memorial:', data.memorial?.title);
 			deviceId = data.deviceId;
 			memorial = data.memorial;
+			livekitCreds = data.livekit;
+			if (!livekitCreds) {
+				console.warn('[CameraPage] No LiveKit credentials returned — check server config');
+			}
 			return true;
-		} catch {
+		} catch (e) {
+			console.error('[CameraPage] Validation error:', e);
 			error = 'Failed to validate token. Check your internet connection.';
 			return false;
 		}
 	}
 
-	async function initCamera() {
+	async function syncStatusToDb(status: 'connected' | 'disconnected') {
+		if (!deviceId) return;
 		try {
+			console.log('[CameraPage] Syncing status to DB:', status);
+			await fetch(`/api/devices/${deviceId}/status`, {
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ status })
+			});
+			console.log('[CameraPage] Status synced successfully');
+		} catch (e) {
+			console.error('[CameraPage] Failed to sync status:', e);
+		}
+	}
+
+	async function initCamera() {
+		console.log('[CameraPage] initCamera() called');
+		try {
+			console.log('[CameraPage] Requesting camera with facingMode:', facingMode);
 			stream = await navigator.mediaDevices.getUserMedia({
 				video: {
 					facingMode,
@@ -58,31 +94,49 @@
 				audio: true
 			});
 
-			if (videoElement) {
-				videoElement.srcObject = stream;
-			}
+			console.log('[CameraPage] Camera stream acquired:', stream.id);
+			console.log('[CameraPage] Video tracks:', stream.getVideoTracks().map(t => t.label));
+			console.log('[CameraPage] Audio tracks:', stream.getAudioTracks().map(t => t.label));
 
-			// Initialize WebRTC peer connection
-			if (deviceId && memorial) {
+			// Stream will be attached via $effect when videoElement becomes available
+			console.log('[CameraPage] Stream ready, will attach via $effect');
+
+			// Connect to LiveKit and publish tracks
+			if (deviceId && memorial && livekitCreds) {
+				console.log('[CameraPage] Connecting to LiveKit room');
+				console.log('[CameraPage] deviceId:', deviceId, 'memorialId:', memorial.id);
 				connectionStatus = 'connecting';
 
-				peer = new WebRTCPeer({
-					deviceId,
-					memorialId: memorial.id,
-					isInitiator: true,
-					onStateChange: (state) => {
+				livekitRoom = new LiveKitRoom({
+					onConnectionChange: async (state) => {
+						console.log('[CameraPage] LiveKit state changed:', state);
 						if (state === 'connected') {
 							connectionStatus = 'connected';
-						} else if (state === 'disconnected' || state === 'failed') {
+							await syncStatusToDb('connected');
+						} else if (state === 'disconnected') {
 							connectionStatus = 'disconnected';
-						} else if (state === 'connecting') {
+							await syncStatusToDb('disconnected');
+						} else if (state === 'connecting' || state === 'reconnecting') {
 							connectionStatus = 'connecting';
 						}
 					}
 				});
 
-				await peer.addStream(stream);
-				peer.start();
+				try {
+					await livekitRoom.connect(livekitCreds.url, livekitCreds.token);
+
+					// Publish video and audio tracks
+					for (const track of stream.getTracks()) {
+						console.log('[CameraPage] Publishing track:', track.kind, track.label);
+						await livekitRoom.publishTrack(track, { name: `${deviceId}-${track.kind}` });
+					}
+
+					console.log('[CameraPage] All tracks published to LiveKit');
+				} catch (e) {
+					console.error('[CameraPage] LiveKit connection error:', e);
+					connectionStatus = 'disconnected';
+					await syncStatusToDb('disconnected');
+				}
 			}
 
 			// Try to get battery level
@@ -93,32 +147,61 @@
 					batteryLevel = Math.round(battery.level * 100);
 				});
 			}
-		} catch {
-			error = 'Camera access denied. Please allow camera permissions and refresh.';
+		} catch (e) {
+			console.error('[CameraPage] Camera/WebRTC error:', e);
+			const errorMessage = e instanceof Error ? e.message : String(e);
+			if (errorMessage.includes('Permission denied') || errorMessage.includes('NotAllowedError')) {
+				error = 'Camera permission denied. Please allow camera access in your browser settings and tap Retry.';
+			} else if (errorMessage.includes('NotFoundError')) {
+				error = 'No camera found. Please ensure your device has a working camera.';
+			} else {
+				error = `Camera error: ${errorMessage}. Tap Retry to try again.`;
+			}
 		}
 	}
 
+	async function retryCamera() {
+		console.log('[CameraPage] retryCamera() called');
+		error = null;
+		await initCamera();
+	}
+
 	async function flipCamera() {
+		console.log('[CameraPage] flipCamera() called');
+
+		// Unpublish old tracks from LiveKit before stopping them
+		if (livekitRoom && stream) {
+			for (const track of stream.getTracks()) {
+				await livekitRoom.unpublishTrack(track);
+			}
+		}
+
 		if (stream) {
 			stream.getTracks().forEach((track) => track.stop());
 		}
 		facingMode = facingMode === 'environment' ? 'user' : 'environment';
+		console.log('[CameraPage] New facingMode:', facingMode);
 		await initCamera();
 	}
 
 	onMount(() => {
+		console.log('[CameraPage] onMount triggered');
 		const init = async () => {
+			console.log('[CameraPage] Starting initialization...');
 			const valid = await validateToken();
 			if (valid) {
+				console.log('[CameraPage] Token valid, initializing camera...');
 				await initCamera();
+			} else {
+				console.log('[CameraPage] Token invalid, not initializing camera');
 			}
 		};
 
 		init();
 
 		return () => {
-			if (peer) {
-				peer.stop();
+			if (livekitRoom) {
+				livekitRoom.disconnect();
 			}
 			if (stream) {
 				stream.getTracks().forEach((track) => track.stop());
@@ -142,11 +225,12 @@
 				<p class="mt-4 text-lg font-semibold">Connection Error</p>
 				<p class="mt-2 text-sm text-red-200">{error}</p>
 				<button
-					onclick={() => window.location.reload()}
-					class="mt-4 rounded-lg bg-white/20 px-4 py-2 text-sm hover:bg-white/30"
+					onclick={retryCamera}
+					class="mt-4 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-medium hover:bg-indigo-700"
 				>
-					Try Again
+					Retry Camera
 				</button>
+				<p class="mt-3 text-xs text-gray-400">If permission was denied, check your browser settings first.</p>
 			</div>
 		</div>
 	{:else if connectionStatus === 'validating' || connectionStatus === 'idle'}

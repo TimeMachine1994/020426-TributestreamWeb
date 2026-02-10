@@ -12,6 +12,7 @@ export class Compositor {
 
 	private programCtx: CanvasRenderingContext2D | null = null;
 	private previewCtx: CanvasRenderingContext2D | null = null;
+	private previewLogOnce = false;
 	private animationFrameId: number | null = null;
 	private lastFrameTime: number = 0;
 	private frameCount: number = 0;
@@ -164,9 +165,18 @@ export class Compositor {
 		ctx.fillRect(0, 0, width, height);
 
 		const previewSource = this.sourceManager.previewSource;
-		if (previewSource && previewSource.videoElement.readyState >= 2) {
-			ctx.globalAlpha = 1;
-			this.drawVideoFit(ctx, previewSource.videoElement, width, height);
+		if (previewSource) {
+			if (!this.previewLogOnce) {
+				console.log('[Compositor] Preview source:', previewSource.id, 'readyState:', previewSource.videoElement.readyState, 'videoWidth:', previewSource.videoElement.videoWidth);
+				if (previewSource.videoElement.readyState >= 2) {
+					console.log('[Compositor] Preview rendering started');
+					this.previewLogOnce = true;
+				}
+			}
+			if (previewSource.videoElement.readyState >= 2) {
+				ctx.globalAlpha = 1;
+				this.drawVideoFit(ctx, previewSource.videoElement, width, height);
+			}
 		}
 	}
 

@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
 	import { SvelteMap } from 'svelte/reactivity';
 	import AddCameraModal from '$lib/components/AddCameraModal.svelte';
 	import CompositorCanvas from '$lib/components/CompositorCanvas.svelte';
-	import DeviceStream from '$lib/components/DeviceStream.svelte';
-	import type { ConnectionState } from '$lib/webrtc/peer';
+	import LiveKitDeviceStream from '$lib/components/LiveKitDeviceStream.svelte';
+	import { LiveKitRoom, type LiveKitConnectionState } from '$lib/livekit/client';
+	import { Track } from 'livekit-client';
 	import { SourceManager } from '$lib/compositor/SourceManager.svelte';
 	import { Compositor } from '$lib/compositor/Compositor.svelte';
-	import { WhipClient, type WhipConnectionState } from '$lib/compositor/WhipClient';
 	import { AudioMixer } from '$lib/compositor/AudioMixer';
 	import type { TransitionType } from '$lib/compositor/types';
 
@@ -17,14 +18,17 @@
 	const sourceManager = new SourceManager();
 	const compositor = new Compositor(sourceManager);
 	const audioMixer = new AudioMixer();
-	let whipClient: WhipClient | null = null;
-	let whipState = $state<WhipConnectionState>('disconnected');
+	let livekitRoom: LiveKitRoom | null = null;
+	let livekitState = $state<LiveKitConnectionState>('disconnected');
+	let egressId: string | null = null;
 
 	let showAddCamera = $state(false);
 	let localIdCounter = $state(0);
 	let transitionType = $state<TransitionType>('cut');
 	let transitionDuration = $state(500);
-	let deviceStates = new SvelteMap<string, ConnectionState>();
+	// Map of participant identity → MediaStream (from LiveKit track subscriptions)
+	let deviceStreams = new SvelteMap<string, MediaStream>();
+	let deviceStates = new SvelteMap<string, LiveKitConnectionState>();
 
 	const statusColors: Record<string, string> = {
 		draft: 'bg-gray-600',
@@ -47,24 +51,141 @@
 		compositor.takeToProgram(transitionType, transitionDuration);
 	}
 
-	function handleDeviceConnection(deviceId: string, state: ConnectionState) {
-		deviceStates.set(deviceId, state);
-		sourceManager.updateConnectionState(deviceId, state === 'connected');
-	}
+	/**
+	 * Initialize LiveKit room connection for the switcher.
+	 * Subscribes to all remote participant tracks (phone cameras).
+	 */
+	async function initLiveKit() {
+		console.log('[Switcher] Initializing LiveKit connection...');
 
-	function handleDeviceStream(deviceId: string, stream: MediaStream, label: string) {
-		// Register WebRTC device stream with SourceManager for compositing
-		if (!sourceManager.getSource(deviceId)) {
-			sourceManager.addSource(deviceId, stream, label, 'webrtc');
+		// Get a switcher token
+		const tokenRes = await fetch('/api/livekit/token', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				memorialId: data.memorial.id,
+				identity: `switcher-${data.memorial.id}`,
+				name: 'Switcher',
+				role: 'switcher'
+			})
+		});
+
+		if (!tokenRes.ok) {
+			console.error('[Switcher] Failed to get LiveKit token');
+			return;
 		}
-		// Connect audio track to mixer
-		audioMixer.connectSource(deviceId, stream);
+
+		const { token, url } = await tokenRes.json();
+
+		livekitRoom = new LiveKitRoom({
+			onConnectionChange: (state) => {
+				console.log('[Switcher] LiveKit state:', state);
+				livekitState = state;
+			},
+			onTrackSubscribed: ({ track, participant }) => {
+				console.log('[Switcher] Track subscribed:', track.kind, 'from', participant.identity);
+				const identity = participant.identity;
+
+				if (track.kind === Track.Kind.Video || track.kind === Track.Kind.Audio) {
+					// Build or update a MediaStream for this participant
+					let mediaStream = deviceStreams.get(identity);
+					if (!mediaStream) {
+						mediaStream = new MediaStream();
+						deviceStreams.set(identity, mediaStream);
+					}
+					mediaStream.addTrack(track.mediaStreamTrack);
+
+					// Register with SourceManager when we have video
+					if (track.kind === Track.Kind.Video) {
+						const label = participant.name || identity;
+						if (!sourceManager.getSource(identity)) {
+							sourceManager.addSource(identity, mediaStream, label, 'webrtc');
+						}
+						deviceStates.set(identity, 'connected');
+						sourceManager.updateConnectionState(identity, true);
+					}
+
+					// Connect audio to mixer
+					if (track.kind === Track.Kind.Audio) {
+						audioMixer.connectSource(identity, mediaStream);
+					}
+				}
+			},
+			onTrackUnsubscribed: (track, _pub, participant) => {
+				console.log('[Switcher] Track unsubscribed:', track.kind, 'from', participant.identity);
+				const identity = participant.identity;
+				const mediaStream = deviceStreams.get(identity);
+				if (mediaStream) {
+					mediaStream.removeTrack(track.mediaStreamTrack);
+					// If no tracks left, clean up
+					if (mediaStream.getTracks().length === 0) {
+						deviceStreams.delete(identity);
+						sourceManager.removeSource(identity);
+						audioMixer.disconnectSource(identity);
+						deviceStates.delete(identity);
+					}
+				}
+			},
+			onParticipantDisconnected: (participant) => {
+				console.log('[Switcher] Participant left:', participant.identity);
+				const identity = participant.identity;
+				deviceStreams.delete(identity);
+				sourceManager.removeSource(identity);
+				audioMixer.disconnectSource(identity);
+				deviceStates.set(identity, 'disconnected');
+			}
+		});
+
+		try {
+			await livekitRoom.connect(url, token);
+			console.log('[Switcher] Connected to LiveKit room:', livekitRoom.roomName);
+		} catch (e) {
+			console.error('[Switcher] Failed to connect to LiveKit:', e);
+		}
 	}
 
 	function handleLocalStream(stream: MediaStream, label: string) {
 		const id = `local-${localIdCounter++}`;
 		sourceManager.addSource(id, stream, label, 'local');
 		audioMixer.connectSource(id, stream);
+	}
+
+	async function handleDeviceReady(deviceId: string) {
+		console.log('[Switcher] Device ready:', deviceId);
+		// Refresh the page data to include the new device
+		await invalidateAll();
+		showAddCamera = false;
+	}
+
+	async function removeDevice(deviceId: string) {
+		console.log('[Switcher] Removing device:', deviceId);
+		try {
+			// Remove from compositor/audio
+			sourceManager.removeSource(deviceId);
+			audioMixer.disconnectSource(deviceId);
+			deviceStates.delete(deviceId);
+			deviceStreams.delete(deviceId);
+
+			// Delete from database
+			await fetch(`/api/devices/${deviceId}`, { method: 'DELETE' });
+
+			// Refresh device list
+			await invalidateAll();
+			console.log('[Switcher] Device removed successfully');
+		} catch (e) {
+			console.error('[Switcher] Failed to remove device:', e);
+		}
+	}
+
+	function removeLocalSource(sourceId: string) {
+		console.log('[Switcher] Removing local source:', sourceId);
+		const source = sourceManager.getSource(sourceId);
+		if (source) {
+			// Stop the media tracks
+			source.stream.getTracks().forEach(t => t.stop());
+		}
+		sourceManager.removeSource(sourceId);
+		audioMixer.disconnectSource(sourceId);
 	}
 
 	function srcObject(node: HTMLVideoElement, stream: MediaStream) {
@@ -110,7 +231,10 @@
 		streamError = null;
 
 		try {
-			// First ensure Mux stream is created
+			console.log('[Switcher] goLive() called');
+
+			// 1. Create Mux stream (get streamKey for egress)
+			console.log('[Switcher] Creating Mux stream...');
 			const createResponse = await fetch('/api/streams/create', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -122,10 +246,11 @@
 				throw new Error(err.message || 'Failed to create stream');
 			}
 
-			// Get WHIP endpoint from response
 			const createData = await createResponse.json();
+			console.log('[Switcher] Mux stream created, key:', createData.streamKey?.substring(0, 8) + '...');
 
-			// Then go live on server
+			// 2. Set memorial to live on server
+			console.log('[Switcher] Setting memorial to live...');
 			const liveResponse = await fetch('/api/streams/go-live', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -137,27 +262,76 @@
 				throw new Error(err.message || 'Failed to go live');
 			}
 
-			// Initialize audio mixer and get mixed audio stream
+			// 3. Initialize audio mixer and get compositor output
 			const audioStream = audioMixer.initialize();
-
-			// Get compositor video output and combine with audio
 			const videoStream = compositor.outputStream;
+			console.log('[Switcher] Compositor output:', videoStream ? 'available' : 'NULL');
+
 			if (!videoStream) {
-				throw new Error('Compositor output stream not available');
+				throw new Error('Compositor output stream not available. Make sure a source is in Program first.');
 			}
 
-			const combinedStream = AudioMixer.combineStreams(videoStream, audioStream);
-
-			// Connect to Mux via WHIP
-			if (createData.whipEndpoint) {
-				whipClient = new WhipClient((state) => {
-					whipState = state;
-				});
-				await whipClient.connect(combinedStream, createData.whipEndpoint);
+			// 4. Publish composited video + mixed audio to LiveKit room
+			if (!livekitRoom || livekitRoom.state !== 'connected') {
+				throw new Error('LiveKit room not connected. Wait for connection before going live.');
 			}
+
+			const videoTrack = videoStream.getVideoTracks()[0];
+			const audioTrack = audioStream?.getAudioTracks()[0] ?? null;
+
+			if (!videoTrack) throw new Error('No video track from compositor');
+
+			console.log('[Switcher] Publishing composited tracks to LiveKit...');
+			await livekitRoom.publishTrack(videoTrack, { name: 'composited-video' });
+			let pubAudioSid = '';
+			if (audioTrack) {
+				await livekitRoom.publishTrack(audioTrack, { name: 'composited-audio' });
+				// Get the track SID from the Room's local participant
+				for (const pub of livekitRoom.getRoom().localParticipant.trackPublications.values()) {
+					if (pub.trackName === 'composited-audio') {
+						pubAudioSid = pub.trackSid;
+						break;
+					}
+				}
+			}
+
+			// Get video track SID
+			let pubVideoSid = '';
+			for (const pub of livekitRoom.getRoom().localParticipant.trackPublications.values()) {
+				if (pub.trackName === 'composited-video') {
+					pubVideoSid = pub.trackSid;
+					break;
+				}
+			}
+
+			console.log('[Switcher] Published. Video SID:', pubVideoSid, 'Audio SID:', pubAudioSid);
+
+			// 5. Start LiveKit Egress → Mux RTMP
+			console.log('[Switcher] Starting egress to Mux...');
+			const egressResponse = await fetch('/api/livekit/egress/start', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					roomName: `memorial-${data.memorial.id}`,
+					muxStreamKey: createData.streamKey,
+					audioTrackId: pubAudioSid,
+					videoTrackId: pubVideoSid
+				})
+			});
+
+			if (!egressResponse.ok) {
+				const err = await egressResponse.json();
+				throw new Error(err.message || 'Failed to start egress');
+			}
+
+			const egressData = await egressResponse.json();
+			egressId = egressData.egressId;
+			console.log('[Switcher] Egress started! ID:', egressId);
 
 			statusOverride = 'live';
+			console.log('[Switcher] Go live complete!');
 		} catch (e) {
+			console.error('[Switcher] goLive error:', e);
 			streamError = e instanceof Error ? e.message : 'An error occurred';
 		} finally {
 			isStreamLoading = false;
@@ -169,12 +343,30 @@
 		streamError = null;
 
 		try {
-			// Disconnect WHIP client first
-			if (whipClient) {
-				await whipClient.disconnect();
-				whipClient = null;
+			// 1. Stop egress
+			if (egressId) {
+				console.log('[Switcher] Stopping egress:', egressId);
+				await fetch('/api/livekit/egress/stop', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ egressId })
+				});
+				egressId = null;
 			}
 
+			// 2. Unpublish composited tracks from LiveKit
+			if (livekitRoom) {
+				const room = livekitRoom.getRoom();
+				for (const pub of room.localParticipant.trackPublications.values()) {
+					if (pub.trackName === 'composited-video' || pub.trackName === 'composited-audio') {
+						if (pub.track?.mediaStreamTrack) {
+							await livekitRoom.unpublishTrack(pub.track.mediaStreamTrack);
+						}
+					}
+				}
+			}
+
+			// 3. End stream on server
 			const response = await fetch('/api/streams/end', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -196,10 +388,11 @@
 
 	onMount(() => {
 		compositor.start();
+		initLiveKit();
 	});
 
 	onDestroy(() => {
-		whipClient?.disconnect();
+		livekitRoom?.disconnect();
 		audioMixer.destroy();
 		compositor.destroy();
 		sourceManager.destroy();
@@ -220,20 +413,20 @@
 			{#if streamError}
 				<span class="text-xs text-red-400">{streamError}</span>
 			{/if}
-			{#if whipState === 'connecting'}
+			{#if livekitState === 'connecting' || livekitState === 'reconnecting'}
 				<span class="flex items-center gap-1 text-xs text-yellow-400">
 					<span class="h-2 w-2 animate-pulse rounded-full bg-yellow-400"></span>
-					WHIP Connecting
+					LiveKit {livekitState === 'reconnecting' ? 'Reconnecting' : 'Connecting'}
 				</span>
-			{:else if whipState === 'connected'}
+			{:else if livekitState === 'connected'}
 				<span class="flex items-center gap-1 text-xs text-green-400">
 					<span class="h-2 w-2 rounded-full bg-green-400"></span>
-					WHIP
+					LiveKit
 				</span>
-			{:else if whipState === 'failed'}
+			{:else if livekitState === 'disconnected'}
 				<span class="flex items-center gap-1 text-xs text-red-400">
 					<span class="h-2 w-2 rounded-full bg-red-400"></span>
-					WHIP Failed
+					LiveKit Off
 				</span>
 			{/if}
 			<span class="rounded px-2 py-1 text-xs font-medium {statusColors[currentStatus]}">
@@ -335,55 +528,77 @@
 					{/if}
 				</div>
 				<div class="grid grid-cols-4 gap-2">
-					<!-- WebRTC Device Sources -->
+					<!-- LiveKit Device Sources -->
 					{#each data.devices as device (device.id)}
-						<button
-							onclick={() => selectSource(device.id)}
-							class="relative aspect-video overflow-hidden rounded border-2 bg-gray-800 transition {selectedSourceId === device.id
+						<div class="relative aspect-video overflow-hidden rounded border-2 bg-gray-800 transition {selectedSourceId === device.id
 								? 'border-green-500'
 								: programSourceId === device.id
 									? 'border-red-500'
-									: 'border-gray-600 hover:border-gray-500'}"
-						>
-							<DeviceStream
-								deviceId={device.id}
-								memorialId={data.memorial.id}
-								deviceName={device.name ?? 'Camera'}
-								onConnectionChange={(state) => handleDeviceConnection(device.id, state)}
-								onStream={(stream) => handleDeviceStream(device.id, stream, device.name ?? 'Camera')}
-							/>
+									: 'border-gray-600 hover:border-gray-500'}">
+							<button
+								onclick={() => selectSource(device.id)}
+								class="h-full w-full"
+								aria-label="Select {device.name ?? 'Camera'}"
+							>
+								<LiveKitDeviceStream
+									deviceName={device.name ?? 'Camera'}
+									stream={deviceStreams.get(device.id) ?? null}
+									connectionState={deviceStates.get(device.id) ?? 'disconnected'}
+								/>
+							</button>
 							{#if device.batteryLevel !== null}
 								<div class="absolute bottom-1 right-1 rounded bg-gray-900/80 px-1.5 py-0.5 text-xs">
 									{device.batteryLevel}%
 								</div>
 							{/if}
-						</button>
+							<button
+								onclick={(e) => { e.stopPropagation(); removeDevice(device.id); }}
+								class="absolute top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600/80 text-xs text-white opacity-0 transition hover:bg-red-500 group-hover:opacity-100 [div:hover>&]:opacity-100"
+								title="Remove device"
+							>
+								<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</button>
+						</div>
 					{/each}
 
 					<!-- Local Camera Sources (from SourceManager) -->
 					{#each allSources.filter(s => s.type === 'local') as source (source.id)}
-						<button
-							onclick={() => selectSource(source.id)}
-							class="relative aspect-video overflow-hidden rounded border-2 bg-gray-800 transition {selectedSourceId === source.id
+						<div class="relative aspect-video overflow-hidden rounded border-2 bg-gray-800 transition {selectedSourceId === source.id
 								? 'border-green-500'
 								: programSourceId === source.id
 									? 'border-red-500'
-									: 'border-gray-600 hover:border-gray-500'}"
-						>
-							<video
-								autoplay
-								playsinline
-								muted
-								class="h-full w-full object-cover"
-								use:srcObject={source.stream}
-							></video>
+									: 'border-gray-600 hover:border-gray-500'}">
+							<button
+								onclick={() => selectSource(source.id)}
+								class="h-full w-full"
+								aria-label="Select {source.label}"
+							>
+								<video
+									autoplay
+									playsinline
+									muted
+									class="h-full w-full object-cover"
+									use:srcObject={source.stream}
+								></video>
+							</button>
 							<div class="absolute bottom-1 left-1 rounded bg-gray-900/80 px-1.5 py-0.5 text-xs">
 								{source.label}
 							</div>
 							<div class="absolute top-1 right-1 rounded bg-indigo-600/80 px-1.5 py-0.5 text-xs">
 								Local
 							</div>
-						</button>
+							<button
+								onclick={(e) => { e.stopPropagation(); removeLocalSource(source.id); }}
+								class="absolute top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600/80 text-xs text-white opacity-0 transition hover:bg-red-500 [div:hover>&]:opacity-100"
+								title="Remove source"
+							>
+								<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</button>
+						</div>
 					{/each}
 
 					<!-- Add Device Slot -->
@@ -519,5 +734,6 @@
 		memorialId={data.memorial.id}
 		onClose={() => (showAddCamera = false)}
 		onLocalStream={handleLocalStream}
+		onDeviceReady={handleDeviceReady}
 	/>
 {/if}

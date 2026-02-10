@@ -16,7 +16,6 @@ export interface LiveStreamResult {
 	streamKey: string;
 	playbackId: string;
 	liveStreamId: string;
-	whipEndpoint: string;
 }
 
 export async function createLiveStream(memorialSlug: string): Promise<LiveStreamResult | null> {
@@ -44,8 +43,7 @@ export async function createLiveStream(memorialSlug: string): Promise<LiveStream
 		return {
 			streamKey: liveStream.stream_key!,
 			playbackId,
-			liveStreamId: liveStream.id,
-			whipEndpoint: `https://global-live.mux.com/app/${liveStream.stream_key!}/whip`
+			liveStreamId: liveStream.id
 		};
 	} catch (error) {
 		console.error('Failed to create Mux live stream:', error);

@@ -5,6 +5,7 @@ export class SourceManager {
 	sources = new SvelteMap<string, VideoSource>();
 	activePreview = $state<string | null>(null);
 	activeProgram = $state<string | null>(null);
+	private pendingPreview: string | null = null;
 
 	addSource(
 		id: string,
@@ -24,6 +25,12 @@ export class SourceManager {
 		videoElement.style.height = '1px';
 		document.body.appendChild(videoElement);
 
+		// Explicitly play — some browsers won't autoplay programmatic elements
+		videoElement.play().catch((e) => {
+			console.warn('[SourceManager] Video play() failed:', e);
+		});
+		console.log('[SourceManager] addSource:', id, 'type:', type, 'label:', label);
+
 		const source: VideoSource = {
 			id,
 			type,
@@ -37,7 +44,15 @@ export class SourceManager {
 
 		// Auto-select first source as preview
 		if (this.sources.size === 1 && !this.activePreview) {
+			console.log('[SourceManager] Auto-selecting first source as preview:', id);
 			this.activePreview = id;
+		}
+
+		// Fulfill deferred preview selection
+		if (this.pendingPreview === id) {
+			console.log('[SourceManager] Fulfilling deferred preview:', id);
+			this.activePreview = id;
+			this.pendingPreview = null;
 		}
 
 		return videoElement;
@@ -65,7 +80,13 @@ export class SourceManager {
 
 	setPreview(id: string): void {
 		if (this.sources.has(id)) {
+			console.log('[SourceManager] setPreview:', id);
 			this.activePreview = id;
+			this.pendingPreview = null;
+		} else {
+			// Source not registered yet — defer until addSource is called
+			console.log('[SourceManager] setPreview deferred (source not yet registered):', id);
+			this.pendingPreview = id;
 		}
 	}
 

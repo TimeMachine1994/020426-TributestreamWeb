@@ -21,11 +21,15 @@ function generateId(): string {
 }
 
 export const POST: RequestHandler = async ({ request, locals }) => {
+	console.log('[API /devices/create-token] Request received');
 	if (!locals.user) {
+		console.log('[API /devices/create-token] ERROR: Unauthorized');
 		throw error(401, 'Unauthorized');
 	}
+	console.log('[API /devices/create-token] User:', locals.user.username);
 
 	const { memorialId } = await request.json();
+	console.log('[API /devices/create-token] Memorial ID:', memorialId);
 
 	if (!memorialId) {
 		throw error(400, 'Memorial ID is required');
@@ -48,9 +52,14 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const token = generateToken();
 	const now = new Date();
 	const expiresAt = new Date(now.getTime() + 5 * 60 * 1000); // 5 minutes
+	console.log('[API /devices/create-token] Generated token:', token.substring(0, 8) + '...');
+	console.log('[API /devices/create-token] Expires at:', expiresAt.toISOString());
+
+	const deviceId = generateId();
+	console.log('[API /devices/create-token] Device ID:', deviceId);
 
 	await db.insert(table.device).values({
-		id: generateId(),
+		id: deviceId,
 		token,
 		memorialId,
 		userId: locals.user.id,
@@ -59,8 +68,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		createdAt: now
 	});
 
+	console.log('[API /devices/create-token] Device created successfully');
 	return json({
 		token,
+		deviceId,
 		expiresAt: expiresAt.toISOString()
 	});
 };

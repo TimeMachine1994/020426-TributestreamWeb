@@ -58,6 +58,8 @@ export const memorial = sqliteTable('memorial', {
 	muxStreamKey: text('mux_stream_key'),
 	muxPlaybackId: text('mux_playback_id'),
 	muxAssetId: text('mux_asset_id'),
+	livekitRoomName: text('livekit_room_name'),
+	egressId: text('egress_id'),
 	chatEnabled: integer('chat_enabled', { mode: 'boolean' }).notNull().default(true),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull()
