@@ -18,6 +18,10 @@ export class Compositor {
 	private frameCount: number = 0;
 	private fpsAccumulator: number = 0;
 
+	// Web Worker timer for background-tab rendering during live streaming
+	private workerTimer: Worker | null = null;
+	private isLiveMode = false;
+
 	isRunning = $state(false);
 	measuredFps = $state(0);
 	outputStream = $state<MediaStream | null>(null);
@@ -56,10 +60,59 @@ export class Compositor {
 
 	stop(): void {
 		this.isRunning = false;
+		this.disableLiveMode();
 		if (this.animationFrameId !== null) {
 			cancelAnimationFrame(this.animationFrameId);
 			this.animationFrameId = null;
 		}
+	}
+
+	/**
+	 * Enable live mode: uses a Web Worker timer instead of requestAnimationFrame
+	 * so the render loop keeps running at full fps even when the tab is backgrounded.
+	 * Call this when going live / starting egress.
+	 */
+	enableLiveMode(): void {
+		if (this.isLiveMode) return;
+		this.isLiveMode = true;
+
+		// Stop the rAF loop — worker will drive rendering
+		if (this.animationFrameId !== null) {
+			cancelAnimationFrame(this.animationFrameId);
+			this.animationFrameId = null;
+		}
+
+		const interval = Math.round(1000 / this.config.fps);
+		const workerCode = `let id; onmessage = (e) => { if (e.data === 'start') { id = setInterval(() => postMessage('tick'), ${interval}); } else if (e.data === 'stop') { clearInterval(id); } };`;
+		const blob = new Blob([workerCode], { type: 'application/javascript' });
+		this.workerTimer = new Worker(URL.createObjectURL(blob));
+		this.workerTimer.onmessage = () => {
+			if (!this.isRunning) return;
+			this.renderLoop(performance.now());
+		};
+		this.workerTimer.postMessage('start');
+		console.log('[Compositor] Live mode enabled — Worker timer active at', this.config.fps, 'fps');
+	}
+
+	/**
+	 * Disable live mode: go back to requestAnimationFrame.
+	 * Call this when ending stream.
+	 */
+	disableLiveMode(): void {
+		if (!this.isLiveMode) return;
+		this.isLiveMode = false;
+
+		if (this.workerTimer) {
+			this.workerTimer.postMessage('stop');
+			this.workerTimer.terminate();
+			this.workerTimer = null;
+		}
+
+		// Resume rAF loop if still running
+		if (this.isRunning) {
+			this.renderLoop(performance.now());
+		}
+		console.log('[Compositor] Live mode disabled — back to requestAnimationFrame');
 	}
 
 	takeToProgram(
@@ -118,7 +171,10 @@ export class Compositor {
 			this.renderPreview(this.previewCtx);
 		}
 
-		this.animationFrameId = requestAnimationFrame(this.renderLoop);
+		// In live mode, the Worker drives the loop — don't schedule rAF
+		if (!this.isLiveMode) {
+			this.animationFrameId = requestAnimationFrame(this.renderLoop);
+		}
 	};
 
 	private renderProgram(ctx: CanvasRenderingContext2D, timestamp: number): void {
@@ -214,6 +270,7 @@ export class Compositor {
 
 	destroy(): void {
 		this.stop();
+		this.disableLiveMode();
 		this.outputStream = null;
 		this.programCtx = null;
 		this.previewCtx = null;

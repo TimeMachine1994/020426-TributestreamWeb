@@ -6,21 +6,31 @@
 	import CompositorCanvas from '$lib/components/CompositorCanvas.svelte';
 	import LiveKitDeviceStream from '$lib/components/LiveKitDeviceStream.svelte';
 	import { LiveKitRoom, type LiveKitConnectionState } from '$lib/livekit/client';
-	import { Track } from 'livekit-client';
+	import { Track, RoomEvent } from 'livekit-client';
 	import { SourceManager } from '$lib/compositor/SourceManager.svelte';
 	import { Compositor } from '$lib/compositor/Compositor.svelte';
 	import { AudioMixer } from '$lib/compositor/AudioMixer';
 	import type { TransitionType } from '$lib/compositor/types';
+	import { SwitcherRpc } from '$lib/livekit/switcher-rpc';
+	import {
+		TOPIC_COMPOSITOR_STATE,
+		TOPIC_COMPOSITOR_IDENTITY,
+		type CompositorState
+	} from '$lib/livekit/rpc-commands';
 
 	let { data } = $props();
 
-	// --- Compositor setup ---
+	// --- Compositor mode: 'server' uses Room Composite Egress, 'client' uses local canvas ---
+	let compositorMode = $state<'client' | 'server'>('server');
+
+	// --- Compositor setup (client mode only for canvas rendering) ---
 	const sourceManager = new SourceManager();
-	const compositor = new Compositor(sourceManager);
-	const audioMixer = new AudioMixer();
+	const compositor: Compositor | null = compositorMode === 'client' ? new Compositor(sourceManager) : null;
+	const audioMixer: AudioMixer | null = compositorMode === 'client' ? new AudioMixer() : null;
 	let livekitRoom: LiveKitRoom | null = null;
 	let livekitState = $state<LiveKitConnectionState>('disconnected');
 	let egressId: string | null = null;
+	let switcherRpc: SwitcherRpc | null = null;
 
 	let showAddCamera = $state(false);
 	let localIdCounter = $state(0);
@@ -30,6 +40,9 @@
 	let deviceStreams = new SvelteMap<string, MediaStream>();
 	let deviceStates = new SvelteMap<string, LiveKitConnectionState>();
 
+	// Server mode: compositor state received via data packets from egress template
+	let serverState = $state<CompositorState | null>(null);
+
 	const statusColors: Record<string, string> = {
 		draft: 'bg-gray-600',
 		scheduled: 'bg-blue-600',
@@ -38,17 +51,39 @@
 		archived: 'bg-gray-600'
 	};
 
-	// Derived state
-	let selectedSourceId = $derived(sourceManager.activePreview);
-	let programSourceId = $derived(sourceManager.activeProgram);
+	// Derived state — in server mode, program/preview come from compositor-state data packets
+	let selectedSourceId = $derived(
+		compositorMode === 'server' && serverState
+			? serverState.previewSource
+			: sourceManager.activePreview
+	);
+	let programSourceId = $derived(
+		compositorMode === 'server' && serverState
+			? serverState.programSource
+			: sourceManager.activeProgram
+	);
 	let allSources = $derived(sourceManager.sourceList);
 
 	function selectSource(id: string) {
 		sourceManager.setPreview(id);
+		if (compositorMode === 'server' && switcherRpc) {
+			switcherRpc.setPreview(id).catch((e) => console.warn('[Switcher] RPC setPreview failed:', e));
+		}
 	}
 
-	function takeToProgram() {
-		compositor.takeToProgram(transitionType, transitionDuration);
+	async function takeToProgram() {
+		if (compositorMode === 'server' && switcherRpc) {
+			const sourceId = sourceManager.activePreview;
+			if (!sourceId) return;
+			try {
+				const res = await switcherRpc.switchSource(sourceId, transitionType, transitionDuration);
+				console.log('[Switcher] RPC switchSource:', res);
+			} catch (e) {
+				console.error('[Switcher] RPC switchSource failed:', e);
+			}
+		} else if (compositor) {
+			compositor.takeToProgram(transitionType, transitionDuration);
+		}
 	}
 
 	/**
@@ -105,9 +140,9 @@
 						sourceManager.updateConnectionState(identity, true);
 					}
 
-					// Connect audio to mixer
+					// Connect audio to mixer (client mode only)
 					if (track.kind === Track.Kind.Audio) {
-						audioMixer.connectSource(identity, mediaStream);
+						audioMixer?.connectSource(identity, mediaStream);
 					}
 				}
 			},
@@ -121,7 +156,7 @@
 					if (mediaStream.getTracks().length === 0) {
 						deviceStreams.delete(identity);
 						sourceManager.removeSource(identity);
-						audioMixer.disconnectSource(identity);
+						audioMixer?.disconnectSource(identity);
 						deviceStates.delete(identity);
 					}
 				}
@@ -131,7 +166,7 @@
 				const identity = participant.identity;
 				deviceStreams.delete(identity);
 				sourceManager.removeSource(identity);
-				audioMixer.disconnectSource(identity);
+				audioMixer?.disconnectSource(identity);
 				deviceStates.set(identity, 'disconnected');
 			}
 		});
@@ -139,6 +174,41 @@
 		try {
 			await livekitRoom.connect(url, token);
 			console.log('[Switcher] Connected to LiveKit room:', livekitRoom.roomName);
+
+			// Server mode: listen for compositor identity + state broadcasts
+			if (compositorMode === 'server') {
+				const room = livekitRoom.getRoom();
+				const decoder = new TextDecoder();
+
+				room.on(RoomEvent.DataReceived, (payload: Uint8Array, participant: any, kind: any, topic?: string) => {
+					if (topic === TOPIC_COMPOSITOR_IDENTITY) {
+						try {
+							const msg = JSON.parse(decoder.decode(payload));
+							if (msg.identity && !switcherRpc) {
+								switcherRpc = new SwitcherRpc(room, msg.identity);
+								console.log('[Switcher] Compositor discovered, RPC client ready:', msg.identity);
+							}
+						} catch (e) {
+							console.warn('[Switcher] Failed to parse compositor identity:', e);
+						}
+					}
+					if (topic === TOPIC_COMPOSITOR_STATE) {
+						try {
+							const state: CompositorState = JSON.parse(decoder.decode(payload));
+							serverState = state;
+							// Also discover compositor identity from state if not yet known
+							if (state.compositorIdentity && !switcherRpc) {
+								switcherRpc = new SwitcherRpc(room, state.compositorIdentity);
+								console.log('[Switcher] Compositor discovered from state, RPC client ready:', state.compositorIdentity);
+							}
+						} catch (e) {
+							console.warn('[Switcher] Failed to parse compositor state:', e);
+						}
+					}
+				});
+
+				console.log('[Switcher] Waiting for compositor to announce identity...');
+			}
 		} catch (e) {
 			console.error('[Switcher] Failed to connect to LiveKit:', e);
 		}
@@ -147,7 +217,23 @@
 	function handleLocalStream(stream: MediaStream, label: string) {
 		const id = `local-${localIdCounter++}`;
 		sourceManager.addSource(id, stream, label, 'local');
-		audioMixer.connectSource(id, stream);
+
+		if (compositorMode === 'server' && livekitRoom && livekitRoom.state === 'connected') {
+			// In server mode, publish local camera to LiveKit so the egress template can see it
+			const videoTrack = stream.getVideoTracks()[0];
+			const audioTrack = stream.getAudioTracks()[0];
+			if (videoTrack) {
+				livekitRoom.publishTrack(videoTrack, { name: `local-video-${id}` })
+					.then(() => console.log('[Switcher] Published local video to LiveKit:', id))
+					.catch((e) => console.error('[Switcher] Failed to publish local video:', e));
+			}
+			if (audioTrack) {
+				livekitRoom.publishTrack(audioTrack, { name: `local-audio-${id}` })
+					.catch((e) => console.error('[Switcher] Failed to publish local audio:', e));
+			}
+		} else if (audioMixer) {
+			audioMixer.connectSource(id, stream);
+		}
 	}
 
 	async function handleDeviceReady(deviceId: string) {
@@ -162,7 +248,7 @@
 		try {
 			// Remove from compositor/audio
 			sourceManager.removeSource(deviceId);
-			audioMixer.disconnectSource(deviceId);
+			audioMixer?.disconnectSource(deviceId);
 			deviceStates.delete(deviceId);
 			deviceStreams.delete(deviceId);
 
@@ -185,7 +271,7 @@
 			source.stream.getTracks().forEach(t => t.stop());
 		}
 		sourceManager.removeSource(sourceId);
-		audioMixer.disconnectSource(sourceId);
+		audioMixer?.disconnectSource(sourceId);
 	}
 
 	function srcObject(node: HTMLVideoElement, stream: MediaStream) {
@@ -203,20 +289,31 @@
 	// --- Overlay controls ---
 	let lowerThirdText = $state('');
 	let lowerThirdVisible = $state(false);
-	const overlayManager = compositor.getOverlayManager();
+	const overlayManager = compositor?.getOverlayManager() ?? null;
 
-	function toggleLowerThird() {
-		if (!lowerThirdVisible) {
-			overlayManager.addTextOverlay('lower-third', lowerThirdText || 'Lower Third', 50, 620, {
-				font: 'bold 28px Arial',
-				color: '#ffffff',
-				backgroundColor: 'rgba(0, 0, 0, 0.7)'
-			});
-			overlayManager.show('lower-third');
-			lowerThirdVisible = true;
-		} else {
-			overlayManager.hide('lower-third');
-			lowerThirdVisible = false;
+	async function toggleLowerThird() {
+		const text = lowerThirdText || 'Lower Third';
+		const newVisible = !lowerThirdVisible;
+
+		if (compositorMode === 'server' && switcherRpc) {
+			try {
+				await switcherRpc.setOverlay('lower-third', text, newVisible);
+				lowerThirdVisible = newVisible;
+			} catch (e) {
+				console.error('[Switcher] RPC setOverlay failed:', e);
+			}
+		} else if (overlayManager) {
+			if (newVisible) {
+				overlayManager.addTextOverlay('lower-third', text, 50, 620, {
+					font: 'bold 28px Arial',
+					color: '#ffffff',
+					backgroundColor: 'rgba(0, 0, 0, 0.7)'
+				});
+				overlayManager.show('lower-third');
+			} else {
+				overlayManager.hide('lower-third');
+			}
+			lowerThirdVisible = newVisible;
 		}
 	}
 
@@ -231,7 +328,7 @@
 		streamError = null;
 
 		try {
-			console.log('[Switcher] goLive() called');
+			console.log('[Switcher] goLive() called, mode:', compositorMode);
 
 			// 1. Create Mux stream (get streamKey for egress)
 			console.log('[Switcher] Creating Mux stream...');
@@ -262,71 +359,95 @@
 				throw new Error(err.message || 'Failed to go live');
 			}
 
-			// 3. Initialize audio mixer and get compositor output
-			const audioStream = audioMixer.initialize();
-			const videoStream = compositor.outputStream;
-			console.log('[Switcher] Compositor output:', videoStream ? 'available' : 'NULL');
+			if (compositorMode === 'server') {
+				// 3. Start Room Composite Egress (server-side compositing)
+				if (!livekitRoom || livekitRoom.state !== 'connected') {
+					throw new Error('LiveKit room not connected. Wait for connection before going live.');
+				}
 
-			if (!videoStream) {
-				throw new Error('Compositor output stream not available. Make sure a source is in Program first.');
-			}
+				console.log('[Switcher] Starting Room Composite Egress...');
+				const egressResponse = await fetch('/api/livekit/egress/start', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						roomName: `memorial-${data.memorial.id}`,
+						muxStreamKey: createData.streamKey,
+						mode: 'room-composite'
+					})
+				});
 
-			// 4. Publish composited video + mixed audio to LiveKit room
-			if (!livekitRoom || livekitRoom.state !== 'connected') {
-				throw new Error('LiveKit room not connected. Wait for connection before going live.');
-			}
+				if (!egressResponse.ok) {
+					const err = await egressResponse.json();
+					throw new Error(err.message || 'Failed to start egress');
+				}
 
-			const videoTrack = videoStream.getVideoTracks()[0];
-			const audioTrack = audioStream?.getAudioTracks()[0] ?? null;
+				const egressData = await egressResponse.json();
+				egressId = egressData.egressId;
+				console.log('[Switcher] Room Composite Egress started! ID:', egressId);
+			} else {
+				// Client mode: publish composited tracks + Track Composite Egress
+				const audioStream = audioMixer!.initialize();
+				const videoStream = compositor!.outputStream;
+				console.log('[Switcher] Compositor output:', videoStream ? 'available' : 'NULL');
 
-			if (!videoTrack) throw new Error('No video track from compositor');
+				if (!videoStream) {
+					throw new Error('Compositor output stream not available. Make sure a source is in Program first.');
+				}
 
-			console.log('[Switcher] Publishing composited tracks to LiveKit...');
-			await livekitRoom.publishTrack(videoTrack, { name: 'composited-video' });
-			let pubAudioSid = '';
-			if (audioTrack) {
-				await livekitRoom.publishTrack(audioTrack, { name: 'composited-audio' });
-				// Get the track SID from the Room's local participant
+				if (!livekitRoom || livekitRoom.state !== 'connected') {
+					throw new Error('LiveKit room not connected. Wait for connection before going live.');
+				}
+
+				const videoTrack = videoStream.getVideoTracks()[0];
+				const audioTrack = audioStream?.getAudioTracks()[0] ?? null;
+
+				if (!videoTrack) throw new Error('No video track from compositor');
+
+				console.log('[Switcher] Publishing composited tracks to LiveKit...');
+				await livekitRoom.publishTrack(videoTrack, { name: 'composited-video' });
+				let pubAudioSid = '';
+				if (audioTrack) {
+					await livekitRoom.publishTrack(audioTrack, { name: 'composited-audio' });
+					for (const pub of livekitRoom.getRoom().localParticipant.trackPublications.values()) {
+						if (pub.trackName === 'composited-audio') {
+							pubAudioSid = pub.trackSid;
+							break;
+						}
+					}
+				}
+
+				let pubVideoSid = '';
 				for (const pub of livekitRoom.getRoom().localParticipant.trackPublications.values()) {
-					if (pub.trackName === 'composited-audio') {
-						pubAudioSid = pub.trackSid;
+					if (pub.trackName === 'composited-video') {
+						pubVideoSid = pub.trackSid;
 						break;
 					}
 				}
-			}
 
-			// Get video track SID
-			let pubVideoSid = '';
-			for (const pub of livekitRoom.getRoom().localParticipant.trackPublications.values()) {
-				if (pub.trackName === 'composited-video') {
-					pubVideoSid = pub.trackSid;
-					break;
+				console.log('[Switcher] Published. Video SID:', pubVideoSid, 'Audio SID:', pubAudioSid);
+
+				const egressResponse = await fetch('/api/livekit/egress/start', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						roomName: `memorial-${data.memorial.id}`,
+						muxStreamKey: createData.streamKey,
+						audioTrackId: pubAudioSid,
+						videoTrackId: pubVideoSid
+					})
+				});
+
+				if (!egressResponse.ok) {
+					const err = await egressResponse.json();
+					throw new Error(err.message || 'Failed to start egress');
 				}
+
+				const egressData = await egressResponse.json();
+				egressId = egressData.egressId;
+				console.log('[Switcher] Egress started! ID:', egressId);
+
+				compositor!.enableLiveMode();
 			}
-
-			console.log('[Switcher] Published. Video SID:', pubVideoSid, 'Audio SID:', pubAudioSid);
-
-			// 5. Start LiveKit Egress → Mux RTMP
-			console.log('[Switcher] Starting egress to Mux...');
-			const egressResponse = await fetch('/api/livekit/egress/start', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					roomName: `memorial-${data.memorial.id}`,
-					muxStreamKey: createData.streamKey,
-					audioTrackId: pubAudioSid,
-					videoTrackId: pubVideoSid
-				})
-			});
-
-			if (!egressResponse.ok) {
-				const err = await egressResponse.json();
-				throw new Error(err.message || 'Failed to start egress');
-			}
-
-			const egressData = await egressResponse.json();
-			egressId = egressData.egressId;
-			console.log('[Switcher] Egress started! ID:', egressId);
 
 			statusOverride = 'live';
 			console.log('[Switcher] Go live complete!');
@@ -354,19 +475,24 @@
 				egressId = null;
 			}
 
-			// 2. Unpublish composited tracks from LiveKit
-			if (livekitRoom) {
-				const room = livekitRoom.getRoom();
-				for (const pub of room.localParticipant.trackPublications.values()) {
-					if (pub.trackName === 'composited-video' || pub.trackName === 'composited-audio') {
-						if (pub.track?.mediaStreamTrack) {
-							await livekitRoom.unpublishTrack(pub.track.mediaStreamTrack);
+			if (compositorMode === 'client') {
+				// Client mode: disable live mode + unpublish composited tracks
+				compositor?.disableLiveMode();
+
+				if (livekitRoom) {
+					const room = livekitRoom.getRoom();
+					for (const pub of room.localParticipant.trackPublications.values()) {
+						if (pub.trackName === 'composited-video' || pub.trackName === 'composited-audio') {
+							if (pub.track?.mediaStreamTrack) {
+								await livekitRoom.unpublishTrack(pub.track.mediaStreamTrack);
+							}
 						}
 					}
 				}
 			}
+			// Server mode: egress stop is sufficient — headless Chrome shuts down automatically
 
-			// 3. End stream on server
+			// 2. End stream on server
 			const response = await fetch('/api/streams/end', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -379,6 +505,7 @@
 			}
 
 			statusOverride = 'ended';
+			serverState = null;
 		} catch (e) {
 			streamError = e instanceof Error ? e.message : 'An error occurred';
 		} finally {
@@ -387,14 +514,14 @@
 	}
 
 	onMount(() => {
-		compositor.start();
+		compositor?.start();
 		initLiveKit();
 	});
 
 	onDestroy(() => {
 		livekitRoom?.disconnect();
-		audioMixer.destroy();
-		compositor.destroy();
+		audioMixer?.destroy();
+		compositor?.destroy();
 		sourceManager.destroy();
 	});
 </script>
@@ -482,7 +609,20 @@
 						</div>
 					</div>
 					<div class="relative flex-1 rounded-lg border-2 border-green-500 bg-black">
-						<CompositorCanvas {compositor} mode="preview" />
+						{#if compositorMode === 'client' && compositor}
+							<CompositorCanvas {compositor} mode="preview" />
+						{:else if selectedSourceId}
+							{@const previewSource = sourceManager.getSource(selectedSourceId)}
+							{#if previewSource}
+								<video
+									autoplay
+									playsinline
+									muted
+									class="h-full w-full object-contain"
+									use:srcObject={previewSource.stream}
+								></video>
+							{/if}
+						{/if}
 						{#if !selectedSourceId}
 							<div class="absolute inset-0 flex items-center justify-center">
 								<span class="text-sm text-gray-500">Select a source</span>
@@ -506,7 +646,25 @@
 						{/if}
 					</div>
 					<div class="relative flex-1 rounded-lg border-2 border-red-500 bg-black">
-						<CompositorCanvas {compositor} mode="program" showFps={true} />
+						{#if compositorMode === 'client' && compositor}
+							<CompositorCanvas {compositor} mode="program" showFps={true} />
+						{:else if programSourceId}
+							{@const pgmSource = sourceManager.getSource(programSourceId)}
+							{#if pgmSource}
+								<video
+									autoplay
+									playsinline
+									muted
+									class="h-full w-full object-contain"
+									use:srcObject={pgmSource.stream}
+								></video>
+							{/if}
+							{#if currentStatus === 'live'}
+								<div class="absolute top-2 right-2 rounded bg-red-600/80 px-2 py-0.5 text-xs font-medium">
+									Server Compositing
+								</div>
+							{/if}
+						{/if}
 						{#if !programSourceId}
 							<div class="absolute inset-0 flex items-center justify-center">
 								<span class="text-sm text-gray-500">No program source</span>
@@ -523,7 +681,7 @@
 			<div class="mt-4">
 				<div class="mb-2 flex items-center justify-between">
 					<span class="text-xs font-medium uppercase tracking-wider text-gray-400">Sources ({allSources.length})</span>
-					{#if compositor.isRunning}
+					{#if compositor?.isRunning}
 						<span class="text-xs text-gray-500">{compositor.measuredFps} fps</span>
 					{/if}
 				</div>
@@ -732,6 +890,7 @@
 {#if showAddCamera}
 	<AddCameraModal
 		memorialId={data.memorial.id}
+		serverOrigin={data.origin}
 		onClose={() => (showAddCamera = false)}
 		onLocalStream={handleLocalStream}
 		onDeviceReady={handleDeviceReady}

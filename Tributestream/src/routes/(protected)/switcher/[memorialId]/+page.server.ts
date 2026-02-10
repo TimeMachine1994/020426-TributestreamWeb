@@ -4,7 +4,7 @@ import * as table from '$lib/server/db/schema';
 import { eq, lt, or, and, isNull } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params, parent }) => {
+export const load: PageServerLoad = async ({ params, parent, url }) => {
 	const { user } = await parent();
 
 	const [memorial] = await db
@@ -91,6 +91,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 	devices.forEach(d => console.log('[Switcher]   -', d.id.substring(0, 8) + '...', d.status));
 
 	return {
+		origin: url.origin,
 		memorial: {
 			id: memorial.id,
 			slug: memorial.slug,

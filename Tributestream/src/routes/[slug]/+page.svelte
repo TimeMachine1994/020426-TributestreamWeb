@@ -1,7 +1,13 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	let { data } = $props();
 
 	const memorial = $derived(data.memorial);
+
+	onMount(() => {
+		import('@mux/mux-player');
+	});
 
 	const statusLabels: Record<string, { text: string; class: string }> = {
 		draft: { text: 'Coming Soon', class: 'bg-gray-100 text-gray-700' },
@@ -37,10 +43,13 @@
 			<div class="lg:col-span-2">
 				<div class="aspect-video overflow-hidden rounded-lg bg-black">
 					{#if memorial.status === 'live' && memorial.muxPlaybackId}
-						<!-- TODO: Mux Player integration -->
-						<div class="flex h-full items-center justify-center">
-							<span class="text-white">Live stream will appear here</span>
-						</div>
+						<mux-player
+							playback-id={memorial.muxPlaybackId}
+							stream-type="live"
+							autoplay
+							muted
+							style="width:100%;height:100%;--media-object-fit:contain;"
+						></mux-player>
 					{:else if memorial.status === 'scheduled'}
 						<div class="flex h-full flex-col items-center justify-center text-center">
 							<span class="text-lg font-semibold text-white">Stream Starting Soon</span>

@@ -127,6 +127,14 @@ export class OverlayManager {
 		ctx.fillText(text, x + padding, y + bgHeight / 2);
 	}
 
+	getActiveOverlays(): Array<{ id: string; type: string; visible: boolean }> {
+		return Array.from(this.overlays.values()).map((o) => ({
+			id: o.id,
+			type: o.type,
+			visible: o.visible
+		}));
+	}
+
 	clear(): void {
 		this.overlays.clear();
 	}

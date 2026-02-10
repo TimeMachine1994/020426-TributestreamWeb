@@ -6,12 +6,13 @@
 
 	interface Props {
 		memorialId: string;
+		serverOrigin?: string;
 		onClose: () => void;
 		onLocalStream: (stream: MediaStream, label: string) => void;
 		onDeviceReady?: (deviceId: string) => void;
 	}
 
-	let { memorialId, onClose, onLocalStream, onDeviceReady }: Props = $props();
+	let { memorialId, serverOrigin, onClose, onLocalStream, onDeviceReady }: Props = $props();
 
 	// --- Device polling state ---
 	let deviceId = $state<string | null>(null);
@@ -67,19 +68,10 @@
 			// Start polling to check if phone has connected
 			startDevicePolling();
 
-			// Use network IP instead of localhost so phones can connect
-			// Also ensure HTTPS is used since camera requires secure context
-			let origin = window.location.origin;
-			
-			// Force HTTPS for camera access (required for getUserMedia)
-			origin = origin.replace('http://', 'https://');
-			
-			if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
-				const networkIp = document.querySelector('meta[name="network-ip"]')?.getAttribute('content');
-				if (networkIp) {
-					origin = `https://${networkIp}:${window.location.port}`;
-				}
-			}
+			// Use server-provided origin (from request URL) so the QR code
+			// contains an address the phone can actually reach.
+			// Force HTTPS since camera requires secure context (getUserMedia).
+			let origin = (serverOrigin || window.location.origin).replace('http://', 'https://');
 			const cameraUrl = `${origin}/camera?token=${token}`;
 			console.log('[AddCameraModal] QR Code URL:', cameraUrl);
 			qrCodeDataUrl = await QRCode.toDataURL(cameraUrl, {
