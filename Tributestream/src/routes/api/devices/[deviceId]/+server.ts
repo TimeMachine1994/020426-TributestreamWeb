@@ -4,7 +4,7 @@ import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 
-// DELETE - Remove a device and its signaling messages
+// DELETE - Remove a device
 export const DELETE: RequestHandler = async ({ params, locals }) => {
 	if (!locals.user) {
 		throw error(401, 'Unauthorized');
@@ -26,11 +26,6 @@ export const DELETE: RequestHandler = async ({ params, locals }) => {
 		console.log('[API /devices/delete] Device not found');
 		throw error(404, 'Device not found');
 	}
-
-	// Delete signaling messages first (foreign key)
-	await db
-		.delete(table.signalingMessage)
-		.where(eq(table.signalingMessage.deviceId, deviceId));
 
 	// Delete the device
 	await db

@@ -52,20 +52,10 @@ export const POST: RequestHandler = async ({ locals }) => {
 
 	// Delete stale devices
 	if (staleDevices.length > 0) {
-		const staleIds = staleDevices.map(d => d.id);
-		
-		// First delete related signaling messages
-		for (const id of staleIds) {
-			await db
-				.delete(table.signalingMessage)
-				.where(eq(table.signalingMessage.deviceId, id));
-		}
-		
-		// Then delete the devices
-		for (const id of staleIds) {
+		for (const d of staleDevices) {
 			await db
 				.delete(table.device)
-				.where(eq(table.device.id, id));
+				.where(eq(table.device.id, d.id));
 		}
 	}
 

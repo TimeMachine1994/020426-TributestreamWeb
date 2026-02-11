@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import { LiveKitRoom } from '$lib/livekit/client';
 
 	let videoElement: HTMLVideoElement | undefined = $state();
-	let stream: MediaStream | null = $state(null);
+	let stream: MediaStream | null = $state.raw(null);
 	let error: string | null = $state(null);
 	let connectionStatus: 'idle' | 'validating' | 'connecting' | 'connected' | 'disconnected' =
 		$state('idle');
 	let batteryLevel: number | null = $state(null);
 	let deviceId: string | null = $state(null);
-	let memorial: { id: string; title: string; slug: string } | null = $state(null);
+	let memorial: { id: string; title: string; slug: string } | null = $state.raw(null);
 	let facingMode: 'environment' | 'user' = $state('environment');
 	let livekitRoom: LiveKitRoom | null = null;
 	let livekitCreds: { token: string; url: string; roomName: string } | null = null;
 
-	const token = $derived($page.url.searchParams.get('token'));
+	const token = $derived(page.url.searchParams.get('token'));
 
 	// Reactive effect to attach stream to video element when both are available
 	$effect(() => {

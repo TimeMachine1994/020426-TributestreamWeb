@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	let { form, data } = $props();
 
@@ -10,7 +10,7 @@
 		contributor: 'Contributor'
 	};
 
-	const role = $derived($page.params.role);
+	const role = $derived(page.params.role ?? '');
 	const roleLabel = $derived(roleLabels[role] || 'User');
 </script>
 

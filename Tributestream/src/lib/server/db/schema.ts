@@ -92,27 +92,6 @@ export type Device = typeof device.$inferSelect;
 export type NewDevice = typeof device.$inferInsert;
 
 // ============================================================================
-// SIGNALING MESSAGES (for WebRTC)
-// ============================================================================
-export const signalingMessage = sqliteTable('signaling_message', {
-	id: text('id').primaryKey(),
-	deviceId: text('device_id')
-		.notNull()
-		.references(() => device.id),
-	memorialId: text('memorial_id')
-		.notNull()
-		.references(() => memorial.id),
-	fromDevice: integer('from_device', { mode: 'boolean' }).notNull(), // true = from phone, false = from switcher
-	type: text('type').$type<'offer' | 'answer' | 'ice-candidate'>().notNull(),
-	payload: text('payload').notNull(), // JSON stringified SDP or ICE candidate
-	consumed: integer('consumed', { mode: 'boolean' }).notNull().default(false),
-	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
-});
-
-export type SignalingMessage = typeof signalingMessage.$inferSelect;
-export type NewSignalingMessage = typeof signalingMessage.$inferInsert;
-
-// ============================================================================
 // AUDIT LOG (for SOC2 compliance)
 // ============================================================================
 export const auditLog = sqliteTable('audit_log', {

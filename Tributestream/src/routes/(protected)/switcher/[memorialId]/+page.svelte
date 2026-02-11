@@ -274,15 +274,12 @@
 		audioMixer?.disconnectSource(sourceId);
 	}
 
-	function srcObject(node: HTMLVideoElement, stream: MediaStream) {
-		node.srcObject = stream;
-		return {
-			update(newStream: MediaStream) {
-				node.srcObject = newStream;
-			},
-			destroy() {
+	function srcObject(stream: MediaStream) {
+		return (node: HTMLVideoElement) => {
+			node.srcObject = stream;
+			return () => {
 				node.srcObject = null;
-			}
+			};
 		};
 	}
 
@@ -609,20 +606,28 @@
 						</div>
 					</div>
 					<div class="relative flex-1 rounded-lg border-2 border-green-500 bg-black">
-						{#if compositorMode === 'client' && compositor}
-							<CompositorCanvas {compositor} mode="preview" />
-						{:else if selectedSourceId}
-							{@const previewSource = sourceManager.getSource(selectedSourceId)}
-							{#if previewSource}
-								<video
-									autoplay
-									playsinline
-									muted
-									class="h-full w-full object-contain"
-									use:srcObject={previewSource.stream}
-								></video>
+						<svelte:boundary onerror={(e) => console.error('[Preview] Error:', e)}>
+							{#if compositorMode === 'client' && compositor}
+								<CompositorCanvas {compositor} mode="preview" />
+							{:else if selectedSourceId}
+								{@const previewSource = sourceManager.getSource(selectedSourceId)}
+								{#if previewSource}
+									<video
+										autoplay
+										playsinline
+										muted
+										class="h-full w-full object-contain"
+										{@attach srcObject(previewSource.stream)}
+									></video>
+								{/if}
 							{/if}
-						{/if}
+							{#snippet failed(error, reset)}
+								<div class="absolute inset-0 flex flex-col items-center justify-center gap-2">
+									<span class="text-sm text-red-400">Preview error</span>
+									<button onclick={reset} class="rounded bg-gray-700 px-3 py-1 text-xs hover:bg-gray-600">Retry</button>
+								</div>
+							{/snippet}
+						</svelte:boundary>
 						{#if !selectedSourceId}
 							<div class="absolute inset-0 flex items-center justify-center">
 								<span class="text-sm text-gray-500">Select a source</span>
@@ -646,25 +651,33 @@
 						{/if}
 					</div>
 					<div class="relative flex-1 rounded-lg border-2 border-red-500 bg-black">
-						{#if compositorMode === 'client' && compositor}
-							<CompositorCanvas {compositor} mode="program" showFps={true} />
-						{:else if programSourceId}
-							{@const pgmSource = sourceManager.getSource(programSourceId)}
-							{#if pgmSource}
-								<video
-									autoplay
-									playsinline
-									muted
-									class="h-full w-full object-contain"
-									use:srcObject={pgmSource.stream}
-								></video>
+						<svelte:boundary onerror={(e) => console.error('[Program] Error:', e)}>
+							{#if compositorMode === 'client' && compositor}
+								<CompositorCanvas {compositor} mode="program" showFps={true} />
+							{:else if programSourceId}
+								{@const pgmSource = sourceManager.getSource(programSourceId)}
+								{#if pgmSource}
+									<video
+										autoplay
+										playsinline
+										muted
+										class="h-full w-full object-contain"
+										{@attach srcObject(pgmSource.stream)}
+									></video>
+								{/if}
+								{#if currentStatus === 'live'}
+									<div class="absolute top-2 right-2 rounded bg-red-600/80 px-2 py-0.5 text-xs font-medium">
+										Server Compositing
+									</div>
+								{/if}
 							{/if}
-							{#if currentStatus === 'live'}
-								<div class="absolute top-2 right-2 rounded bg-red-600/80 px-2 py-0.5 text-xs font-medium">
-									Server Compositing
+							{#snippet failed(error, reset)}
+								<div class="absolute inset-0 flex flex-col items-center justify-center gap-2">
+									<span class="text-sm text-red-400">Program error</span>
+									<button onclick={reset} class="rounded bg-gray-700 px-3 py-1 text-xs hover:bg-gray-600">Retry</button>
 								</div>
-							{/if}
-						{/if}
+							{/snippet}
+						</svelte:boundary>
 						{#if !programSourceId}
 							<div class="absolute inset-0 flex items-center justify-center">
 								<span class="text-sm text-gray-500">No program source</span>
@@ -738,7 +751,7 @@
 									playsinline
 									muted
 									class="h-full w-full object-cover"
-									use:srcObject={source.stream}
+									{@attach srcObject(source.stream)}
 								></video>
 							</button>
 							<div class="absolute bottom-1 left-1 rounded bg-gray-900/80 px-1.5 py-0.5 text-xs">

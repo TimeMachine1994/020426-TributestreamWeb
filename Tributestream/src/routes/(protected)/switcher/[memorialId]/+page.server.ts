@@ -53,7 +53,6 @@ export const load: PageServerLoad = async ({ params, parent, url }) => {
 	if (staleDevices.length > 0) {
 		console.log('[Switcher] Cleaning up', staleDevices.length, 'stale devices');
 		for (const d of staleDevices) {
-			await db.delete(table.signalingMessage).where(eq(table.signalingMessage.deviceId, d.id));
 			await db.delete(table.device).where(eq(table.device.id, d.id));
 		}
 		console.log('[Switcher] Cleanup complete');

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	interface Props {
 		children: Snippet;
@@ -18,9 +18,9 @@
 
 	function isActive(href: string, exact: boolean = false): boolean {
 		if (exact) {
-			return $page.url.pathname === href;
+			return page.url.pathname === href;
 		}
-		return $page.url.pathname.startsWith(href);
+		return page.url.pathname.startsWith(href);
 	}
 </script>
 
