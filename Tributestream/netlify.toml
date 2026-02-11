@@ -5,6 +5,12 @@
 [build.environment]
   NODE_VERSION = "20"
 
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+  [plugins.inputs]
+    skip = true
+
 [dev]
   command = "npm run dev"
   framework = "#custom"
