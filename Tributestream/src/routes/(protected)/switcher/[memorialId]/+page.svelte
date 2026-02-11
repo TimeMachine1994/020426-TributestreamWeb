@@ -63,6 +63,7 @@
 			: sourceManager.activeProgram
 	);
 	let allSources = $derived(sourceManager.sourceList);
+	let localSources = $derived(allSources.filter(s => s.type === 'local'));
 
 	function selectSource(id: string) {
 		sourceManager.setPreview(id);
@@ -72,9 +73,10 @@
 	}
 
 	async function takeToProgram() {
+		const sourceId = sourceManager.activePreview;
+		if (!sourceId) return;
+
 		if (compositorMode === 'server' && switcherRpc) {
-			const sourceId = sourceManager.activePreview;
-			if (!sourceId) return;
 			try {
 				const res = await switcherRpc.switchSource(sourceId, transitionType, transitionDuration);
 				console.log('[Switcher] RPC switchSource:', res);
@@ -84,6 +86,9 @@
 		} else if (compositor) {
 			compositor.takeToProgram(transitionType, transitionDuration);
 		}
+
+		// Always update local state so the UI reflects the change
+		sourceManager.setProgram(sourceId);
 	}
 
 	/**
@@ -581,9 +586,9 @@
 	<!-- Main Content -->
 	<div class="flex flex-1 overflow-hidden">
 		<!-- Multiviewer Area -->
-		<div class="flex flex-1 flex-col p-4">
+		<div class="flex flex-1 flex-col min-h-0 overflow-hidden p-4">
 			<!-- Program/Preview Monitors -->
-			<div class="grid flex-1 grid-cols-2 gap-4">
+			<div class="grid flex-1 grid-cols-2 gap-4 min-h-0">
 				<!-- Preview Monitor -->
 				<div class="flex flex-col">
 					<div class="mb-2 flex items-center justify-between">
@@ -691,7 +696,7 @@
 			</div>
 
 			<!-- Source Thumbnails (Multiviewer) -->
-			<div class="mt-4">
+			<div class="mt-4 shrink-0 max-h-48 overflow-y-auto">
 				<div class="mb-2 flex items-center justify-between">
 					<span class="text-xs font-medium uppercase tracking-wider text-gray-400">Sources ({allSources.length})</span>
 					{#if compositor?.isRunning}
@@ -793,10 +798,10 @@
 			<!-- Devices Panel -->
 			<div class="border-b border-gray-700 p-4">
 				<h2 class="text-sm font-semibold uppercase tracking-wider text-gray-400">
-					Connected Devices ({data.devices.length})
+					Connected Devices ({data.devices.length + localSources.length})
 				</h2>
 				<div class="mt-3 space-y-2">
-					{#if data.devices.length === 0}
+					{#if data.devices.length === 0 && localSources.length === 0}
 						<p class="text-sm text-gray-500">No devices connected.</p>
 						<button
 							onclick={() => (showAddCamera = true)}
@@ -814,6 +819,15 @@
 								{#if device.batteryLevel !== null}
 									<span class="text-xs text-gray-400">{device.batteryLevel}%</span>
 								{/if}
+							</div>
+						{/each}
+						{#each localSources as source (source.id)}
+							<div class="flex items-center justify-between rounded bg-gray-700 px-3 py-2">
+								<div class="flex items-center gap-2">
+									<span class="h-2 w-2 rounded-full bg-green-500"></span>
+									<span class="text-sm">{source.label}</span>
+								</div>
+								<span class="text-xs text-indigo-400">Local</span>
 							</div>
 						{/each}
 						<button
