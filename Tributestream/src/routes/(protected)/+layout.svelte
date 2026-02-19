@@ -6,8 +6,8 @@
 		data: {
 			user: {
 				id: string;
-				username: string;
-				email: string | null;
+				email: string;
+				displayName: string | null;
 				role: string;
 			};
 		};
@@ -32,7 +32,7 @@
 				<a href="/dashboard" class="text-xl font-semibold text-gray-900">Tributestream</a>
 				<div class="flex items-center gap-4">
 					<span class="text-sm text-gray-500">
-						{data.user.username} ({roleLabels[data.user.role] || data.user.role})
+						{data.user.displayName || data.user.email} ({roleLabels[data.user.role] || data.user.role})
 					</span>
 					<form method="POST" action="/logout">
 						<button

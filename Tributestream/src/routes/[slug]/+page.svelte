@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import type { MemorialServices } from '$lib/features/booking/types';
 
 	let { data } = $props();
@@ -8,8 +9,19 @@
 	const streams = $derived(data.streams ?? []);
 	const services = $derived(memorial.services as MemorialServices | null);
 
+	const bookingMemorialId = $derived(page.url.searchParams.get('booking'));
+	let showBookingBanner = $state(false);
+	let bannerDismissed = $state(false);
+
 	onMount(() => {
 		import('@mux/mux-player');
+
+		if (bookingMemorialId) {
+			const timer = setTimeout(() => {
+				showBookingBanner = true;
+			}, 3000);
+			return () => clearTimeout(timer);
+		}
 	});
 
 	const statusLabels: Record<string, { text: string; class: string }> = {
@@ -46,6 +58,34 @@
 </svelte:head>
 
 <div class="min-h-screen bg-gray-900">
+	<!-- Complete Booking Banner -->
+	{#if showBookingBanner && !bannerDismissed && bookingMemorialId}
+		<div class="fixed inset-x-0 bottom-0 z-50 animate-slide-up">
+			<div class="mx-auto max-w-3xl px-4 pb-6">
+				<div class="flex items-center justify-between gap-4 rounded-xl bg-amber-500 px-6 py-4 shadow-2xl shadow-amber-500/25">
+					<div>
+						<p class="font-semibold text-slate-900">Your memorial page is ready!</p>
+						<p class="text-sm text-slate-800">Complete your booking to schedule the livestream.</p>
+					</div>
+					<div class="flex items-center gap-2">
+						<button
+							onclick={() => (bannerDismissed = true)}
+							class="rounded-lg px-3 py-2 text-sm font-medium text-slate-800 hover:bg-amber-400"
+						>
+							Later
+						</button>
+						<a
+							href="/schedule/{bookingMemorialId}"
+							class="rounded-lg bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
+						>
+							Complete Booking
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	{/if}
+
 	<!-- Header -->
 	<header class="border-b border-gray-800 bg-gray-900/95 backdrop-blur">
 		<div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
@@ -304,3 +344,20 @@
 		</div>
 	</main>
 </div>
+
+<style>
+	@keyframes slide-up {
+		from {
+			transform: translateY(100%);
+			opacity: 0;
+		}
+		to {
+			transform: translateY(0);
+			opacity: 1;
+		}
+	}
+
+	:global(.animate-slide-up) {
+		animation: slide-up 0.4s ease-out;
+	}
+</style>

@@ -12,12 +12,12 @@ const client = createClient({
 const db = drizzle(client, { schema: table });
 
 const SEED_USERS = [
-	{ username: 'admin', password: 'admin', role: 'admin' as const },
-	{ username: 'funeral_director', password: 'funeral_director', role: 'funeral_director' as const },
-	{ username: 'videographer', password: 'videographer', role: 'videographer' as const },
-	{ username: 'family_member', password: 'family_member', role: 'family_member' as const },
-	{ username: 'contributor', password: 'contributor', role: 'contributor' as const },
-	{ username: 'viewer', password: 'viewer', role: 'viewer' as const }
+	{ email: 'admin@test.com', password: 'admin', role: 'admin' as const, displayName: 'Admin' },
+	{ email: 'funeral_director@test.com', password: 'funeral_director', role: 'funeral_director' as const, displayName: 'Funeral Director' },
+	{ email: 'videographer@test.com', password: 'videographer', role: 'videographer' as const, displayName: 'Videographer' },
+	{ email: 'family_member@test.com', password: 'family_member', role: 'family_member' as const, displayName: 'Family Member' },
+	{ email: 'contributor@test.com', password: 'contributor', role: 'contributor' as const, displayName: 'Contributor' },
+	{ email: 'viewer@test.com', password: 'viewer', role: 'viewer' as const, displayName: 'Viewer' }
 ];
 
 export async function seed() {
@@ -27,11 +27,11 @@ export async function seed() {
 		const existingUser = await db
 			.select()
 			.from(table.user)
-			.where(eq(table.user.username, user.username))
+			.where(eq(table.user.email, user.email))
 			.limit(1);
 
 		if (existingUser.length > 0) {
-			console.log(`  ⏭️  User "${user.username}" already exists, skipping`);
+			console.log(`  ⏭️  User "${user.email}" already exists, skipping`);
 			continue;
 		}
 
@@ -46,14 +46,14 @@ export async function seed() {
 
 		await db.insert(table.user).values({
 			id: userId,
-			username: user.username,
-			email: `${user.username}@tributestream.local`,
+			email: user.email,
+			displayName: user.displayName,
 			passwordHash,
 			role: user.role,
 			createdAt: new Date()
 		});
 
-		console.log(`  ✅ Created user "${user.username}" with role "${user.role}"`);
+		console.log(`  ✅ Created user "${user.email}" with role "${user.role}"`);
 	}
 
 	console.log('🌱 Seeding complete!');

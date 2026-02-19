@@ -15,20 +15,20 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	default: async ({ request, cookies, url }) => {
 		const formData = await request.formData();
-		const username = formData.get('username') as string;
+		const email = formData.get('email') as string;
 		const password = formData.get('password') as string;
 
-		if (!username || !password) {
-			return fail(400, { error: 'Username and password are required' });
+		if (!email || !password) {
+			return fail(400, { error: 'Email and password are required' });
 		}
 
 		const [user] = await db
 			.select()
 			.from(table.user)
-			.where(eq(table.user.username, username));
+			.where(eq(table.user.email, email));
 
 		if (!user) {
-			return fail(400, { error: 'Invalid username or password' });
+			return fail(400, { error: 'Invalid email or password' });
 		}
 
 		const validPassword = await verify(user.passwordHash, password, {
@@ -39,7 +39,7 @@ export const actions: Actions = {
 		});
 
 		if (!validPassword) {
-			return fail(400, { error: 'Invalid username or password' });
+			return fail(400, { error: 'Invalid email or password' });
 		}
 
 		const sessionToken = auth.generateSessionToken();

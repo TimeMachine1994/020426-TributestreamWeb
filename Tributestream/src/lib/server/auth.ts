@@ -45,8 +45,8 @@ export async function validateSessionToken(token: string) {
 		.select({
 			user: {
 				id: table.user.id,
-				username: table.user.username,
 				email: table.user.email,
+				displayName: table.user.displayName,
 				role: table.user.role
 			},
 			session: table.session

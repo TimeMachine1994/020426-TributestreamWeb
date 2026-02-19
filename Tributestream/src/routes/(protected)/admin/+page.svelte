@@ -4,24 +4,24 @@
 
 <div>
 	<h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-	<p class="mt-2 text-gray-600">Welcome, {data.user.username}. Manage your Tributestream platform.</p>
+	<p class="mt-2 text-gray-600">Welcome, {data.user.displayName || data.user.email}. Manage your Tributestream platform.</p>
 
 	<div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 		<div class="rounded-lg bg-white p-6 shadow">
 			<h3 class="text-sm font-medium text-gray-500">Total Memorials</h3>
-			<p class="mt-2 text-3xl font-semibold text-gray-900">--</p>
+			<p class="mt-2 text-3xl font-semibold text-gray-900">{data.stats.totalMemorials}</p>
 		</div>
 		<div class="rounded-lg bg-white p-6 shadow">
 			<h3 class="text-sm font-medium text-gray-500">Active Streams</h3>
-			<p class="mt-2 text-3xl font-semibold text-gray-900">--</p>
+			<p class="mt-2 text-3xl font-semibold text-gray-900">{data.stats.activeStreams}</p>
 		</div>
 		<div class="rounded-lg bg-white p-6 shadow">
 			<h3 class="text-sm font-medium text-gray-500">Total Users</h3>
-			<p class="mt-2 text-3xl font-semibold text-gray-900">--</p>
+			<p class="mt-2 text-3xl font-semibold text-gray-900">{data.stats.totalUsers}</p>
 		</div>
 		<div class="rounded-lg bg-white p-6 shadow">
 			<h3 class="text-sm font-medium text-gray-500">Scheduled</h3>
-			<p class="mt-2 text-3xl font-semibold text-gray-900">--</p>
+			<p class="mt-2 text-3xl font-semibold text-gray-900">{data.stats.scheduledMemorials}</p>
 		</div>
 	</div>
 

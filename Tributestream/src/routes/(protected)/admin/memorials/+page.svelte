@@ -38,13 +38,16 @@
 				<thead class="bg-gray-50">
 					<tr>
 						<th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-							Title
+							Memorial
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+							Owner
 						</th>
 						<th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
 							Status
 						</th>
 						<th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-							Videographer
+							Booking
 						</th>
 						<th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
 							Scheduled
@@ -57,7 +60,7 @@
 				<tbody class="divide-y divide-gray-200 bg-white">
 					{#if data.memorials.length === 0}
 						<tr>
-							<td colspan="5" class="px-6 py-8 text-center text-sm text-gray-500">
+							<td colspan="6" class="px-6 py-8 text-center text-sm text-gray-500">
 								No memorials yet. Create your first memorial to get started.
 							</td>
 						</tr>
@@ -66,9 +69,18 @@
 							<tr class="hover:bg-gray-50">
 								<td class="px-6 py-4">
 									<div class="flex flex-col">
-										<span class="font-medium text-gray-900">{memorial.title}</span>
+										<span class="font-medium text-gray-900">{memorial.lovedOneName || memorial.title}</span>
 										<span class="text-sm text-gray-500">/{memorial.slug}</span>
 									</div>
+								</td>
+								<td class="px-6 py-4 text-sm">
+									{#if memorial.ownerName}
+										<a href="/admin/users/{memorial.ownerId}" class="text-indigo-600 hover:text-indigo-900">
+											{memorial.ownerName}
+										</a>
+									{:else}
+										<span class="text-gray-400">—</span>
+									{/if}
 								</td>
 								<td class="px-6 py-4">
 									<span
@@ -79,27 +91,22 @@
 										{memorial.status}
 									</span>
 								</td>
-								<td class="px-6 py-4 text-sm text-gray-500">
-									{memorial.videographerName ?? '—'}
+								<td class="px-6 py-4">
+									{#if memorial.hasBooking}
+										<span class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">Booked</span>
+									{:else}
+										<span class="text-xs text-gray-400">None</span>
+									{/if}
 								</td>
 								<td class="px-6 py-4 text-sm text-gray-500">
 									{formatDate(memorial.scheduledAt)}
 								</td>
 								<td class="px-6 py-4 text-right text-sm">
-									<a
-										href="/admin/memorials/{memorial.id}"
-										class="text-indigo-600 hover:text-indigo-900"
-									>
-										Edit
-									</a>
-									<span class="mx-2 text-gray-300">|</span>
-									<a
-										href="/{memorial.slug}"
-										target="_blank"
-										class="text-gray-600 hover:text-gray-900"
-									>
-										View
-									</a>
+									<a href="/admin/memorials/{memorial.id}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+									<span class="mx-1 text-gray-300">|</span>
+									<a href="/schedule/{memorial.id}" class="text-indigo-600 hover:text-indigo-900">Calculator</a>
+									<span class="mx-1 text-gray-300">|</span>
+									<a href="/{memorial.slug}" target="_blank" class="text-gray-600 hover:text-gray-900">View</a>
 								</td>
 							</tr>
 						{/each}

@@ -46,6 +46,30 @@
 		</div>
 	{/if}
 
+	<!-- Owner / Family Contact Info -->
+	{#if data.owner}
+		<div class="mt-4 rounded-lg border border-gray-200 bg-white p-4">
+			<h3 class="text-sm font-semibold text-gray-700">Family Contact</h3>
+			<div class="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+				<span class="text-gray-600">
+					<strong>{data.owner.displayName || '—'}</strong>
+				</span>
+				<a href="mailto:{data.owner.email}" class="text-indigo-600 hover:text-indigo-900">{data.owner.email}</a>
+				{#if data.owner.phone}
+					<span class="text-gray-500">{data.owner.phone}</span>
+				{/if}
+				<a href="/admin/users/{data.owner.id}" class="text-indigo-600 hover:text-indigo-900 text-xs">View Account</a>
+			</div>
+			{#if data.memorial.familyContactName || data.memorial.familyContactEmail || data.memorial.familyContactPhone}
+				<div class="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-xs text-gray-400">
+					{#if data.memorial.familyContactName}<span>Contact: {data.memorial.familyContactName}</span>{/if}
+					{#if data.memorial.familyContactEmail}<span>{data.memorial.familyContactEmail}</span>{/if}
+					{#if data.memorial.familyContactPhone}<span>{data.memorial.familyContactPhone}</span>{/if}
+				</div>
+			{/if}
+		</div>
+	{/if}
+
 	<form method="POST" action="?/update" use:enhance class="mt-8 max-w-2xl space-y-6">
 		{#if form?.error}
 			<div class="rounded-md bg-red-50 p-4 text-sm text-red-700">
@@ -124,7 +148,7 @@
 						value={videographer.id}
 						selected={data.memorial.assignedVideographerId === videographer.id}
 					>
-						{videographer.username}
+						{videographer.displayName || videographer.email}
 					</option>
 				{/each}
 			</select>

@@ -22,7 +22,7 @@
 	<div class="flex items-center justify-between">
 		<div>
 			<h1 class="text-2xl font-bold text-gray-900">My Memorials</h1>
-			<p class="mt-1 text-gray-600">Welcome back, {data.user.username}.</p>
+			<p class="mt-1 text-gray-600">Welcome back, {data.user.displayName || data.user.email}.</p>
 		</div>
 		<a
 			href="/dashboard/new"

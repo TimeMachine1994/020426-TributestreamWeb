@@ -25,8 +25,9 @@ export type StreamStatusEnum = (typeof STREAM_STATUSES)[number];
 // ============================================================================
 export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
-	username: text('username').notNull().unique(),
-	email: text('email').unique(),
+	email: text('email').notNull().unique(),
+	displayName: text('display_name'),
+	phone: text('phone'),
 	passwordHash: text('password_hash').notNull(),
 	role: text('role').$type<UserRole>().notNull().default('viewer'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()

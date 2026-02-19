@@ -29,16 +29,16 @@ export const actions: Actions = {
 		}
 
 		const formData = await request.formData();
-		const username = formData.get('username') as string;
-		const email = formData.get('email') as string | null;
+		const email = formData.get('email') as string;
 		const password = formData.get('password') as string;
 
-		if (!username || !password) {
-			return fail(400, { error: 'Username and password are required' });
+		if (!email || !password) {
+			return fail(400, { error: 'Email and password are required' });
 		}
 
-		if (username.length < 3 || username.length > 32) {
-			return fail(400, { error: 'Username must be between 3 and 32 characters' });
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(email)) {
+			return fail(400, { error: 'Please enter a valid email address' });
 		}
 
 		if (password.length < 8) {
@@ -57,14 +57,13 @@ export const actions: Actions = {
 		try {
 			await db.insert(table.user).values({
 				id: userId,
-				username,
-				email: email || null,
+				email,
 				passwordHash,
 				role,
 				createdAt: new Date()
 			});
 		} catch (e) {
-			return fail(400, { error: 'Username or email already exists' });
+			return fail(400, { error: 'An account with this email already exists' });
 		}
 
 		const sessionToken = auth.generateSessionToken();

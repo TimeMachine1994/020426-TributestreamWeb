@@ -13,9 +13,19 @@ export const load: PageServerLoad = async ({ params }) => {
 	}
 
 	const videographers = await db
-		.select({ id: table.user.id, username: table.user.username })
+		.select({ id: table.user.id, email: table.user.email, displayName: table.user.displayName })
 		.from(table.user)
 		.where(eq(table.user.role, 'videographer'));
+
+	// Fetch owner info
+	let owner = null;
+	if (memorial.ownerId) {
+		const [ownerRow] = await db
+			.select({ id: table.user.id, email: table.user.email, displayName: table.user.displayName, phone: table.user.phone })
+			.from(table.user)
+			.where(eq(table.user.id, memorial.ownerId));
+		owner = ownerRow ?? null;
+	}
 
 	return {
 		memorial: {
@@ -24,7 +34,8 @@ export const load: PageServerLoad = async ({ params }) => {
 			createdAt: memorial.createdAt.toISOString(),
 			updatedAt: memorial.updatedAt.toISOString()
 		},
-		videographers
+		videographers,
+		owner
 	};
 };
 

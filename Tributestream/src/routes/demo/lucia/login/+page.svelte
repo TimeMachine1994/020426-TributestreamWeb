@@ -8,9 +8,10 @@
 <h1>Login/Register</h1>
 <form method="post" action="?/login" use:enhance>
 	<label>
-		Username
+		Email
 		<input
-			name="username"
+			name="email"
+			type="email"
 			class="mt-1 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 		/>
 	</label>

@@ -88,7 +88,7 @@
 			>
 				<option value="">— No videographer assigned —</option>
 				{#each data.videographers as videographer}
-					<option value={videographer.id}>{videographer.username}</option>
+					<option value={videographer.id}>{videographer.displayName || videographer.email}</option>
 				{/each}
 			</select>
 		</div>
@@ -104,6 +104,17 @@
 			<p class="mt-1 text-xs text-gray-500">Leave empty to save as draft.</p>
 		</div>
 
+		<div>
+			<label for="lovedOneName" class="block text-sm font-medium text-gray-700">Loved One's Name</label>
+			<input
+				type="text"
+				id="lovedOneName"
+				name="lovedOneName"
+				placeholder="e.g., Jane Doe"
+				class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+			/>
+		</div>
+
 		<div class="flex items-center gap-2">
 			<input
 				type="checkbox"
@@ -113,6 +124,48 @@
 				class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
 			/>
 			<label for="chatEnabled" class="text-sm font-medium text-gray-700">Enable chat</label>
+		</div>
+
+		<hr class="border-gray-200" />
+		<div>
+			<h3 class="text-lg font-semibold text-gray-900">Customer Account</h3>
+			<p class="mt-1 text-sm text-gray-500">
+				Optionally create an account for the family. They'll receive login details via email.
+			</p>
+		</div>
+
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div>
+				<label for="customerName" class="block text-sm font-medium text-gray-700">Customer Name</label>
+				<input
+					type="text"
+					id="customerName"
+					name="customerName"
+					placeholder="John Smith"
+					class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+				/>
+			</div>
+			<div>
+				<label for="customerEmail" class="block text-sm font-medium text-gray-700">Customer Email</label>
+				<input
+					type="email"
+					id="customerEmail"
+					name="customerEmail"
+					placeholder="john@example.com"
+					class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+				/>
+			</div>
+		</div>
+
+		<div class="md:w-1/2">
+			<label for="customerPhone" class="block text-sm font-medium text-gray-700">Customer Phone</label>
+			<input
+				type="tel"
+				id="customerPhone"
+				name="customerPhone"
+				placeholder="(555) 123-4567"
+				class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+			/>
 		</div>
 
 		<div class="flex gap-4">

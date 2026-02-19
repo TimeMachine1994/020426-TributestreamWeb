@@ -14,6 +14,8 @@
 			<div class="flex h-16 justify-between items-center">
 				<a href="/" class="text-xl font-semibold text-gray-900">Tributestream</a>
 				<div class="flex gap-4">
+					<a href="/register/loved-one" class="text-gray-600 hover:text-gray-900">Create Memorial</a>
+					<a href="/search" class="text-gray-600 hover:text-gray-900">Search</a>
 					<a href="/login" class="text-gray-600 hover:text-gray-900">Login</a>
 				</div>
 			</div>

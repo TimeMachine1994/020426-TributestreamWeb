@@ -26,7 +26,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		console.log('[API /devices/create-token] ERROR: Unauthorized');
 		throw error(401, 'Unauthorized');
 	}
-	console.log('[API /devices/create-token] User:', locals.user.username);
+	console.log('[API /devices/create-token] User:', locals.user.email);
 
 	const { memorialId } = await request.json();
 	console.log('[API /devices/create-token] Memorial ID:', memorialId);
