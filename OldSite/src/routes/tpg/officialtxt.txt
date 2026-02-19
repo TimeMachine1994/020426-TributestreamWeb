@@ -1,0 +1,1538 @@
+  00001:01     IN THE CIRCUIT COURT OF THE NINTH JUDICIAL CIRCUIT
+                       IN AND FOR ORANGE COUNTY, FLORIDA
+        02  
+        03                CASE NO.:  2021-CA-006117-O
+        04  
+        05   BRANDON PAIGE,
+        06              Plaintiff,
+        07   vs.
+        08   CIRCLE K STORES, INC., a
+             Foreign Corporation, and
+        09   JOHN DOE,
+        10              Defendants.
+            ___________________________/
+        11  
+        12  
+        13                    VIDEO DEPOSITION OF
+                          DR. M. CHRISTOPHER MACLAREN
+        14                   APPEARING REMOTELY FROM
+                          HILLSBOROUGH COUNTY, FLORIDA
+        15  
+                        Taken on Behalf of the PLAINTIFF
+        16  
+        17      DATE TAKEN:              Thursday, November 13, 2025
+                TIME:                    1:08 p.m. - 2:11 p.m.
+        18  
+                               By Videoconferencez`
+        19  
+        20  
+        21          Examination of the witness taken before:
+        22  
+                              Brianna Williams, FPR
+        23                  U.S. Legal Support, Inc.
+                            124 South Florida Avenue
+        24                          Suite 202
+                            Lakeland, Florida  33801
+        25        APPEARING REMOTELY FROM POLK COUNTY, FLORIDA
+  00002:01  APPEARANCE FOR THE PLAINTIFF
+            (via videoconference)
+        02  
+            KELLY V. BEATTIE, ESQUIRE
+        03  MORGAN & MORGAN, P.A.
+            20 North Orange Avenue
+        04  Suite 1600
+            Orlando, Florida  32801
+        05  (407) 867-4829
+            kbeattie@forthepeople.com
+        06  
+            APPEARANCE FOR THE DEFENDANTS
+        07  (via videoconference)
+        08  CATHERINE M. VERONA, ESQUIRE
+            STOLER RUSSELL KEENER VERONA
+        09  201 North Franklin Street
+            Suite 3100
+        10  Tampa, Florida  33602
+            (813) 609-3200
+        11  cverona@stolerrussell.com
+        12  ALSO PRESENT:
+        13  LEAH MENDEZ, VIDEOGRAPHER
+        14  
+        15  
+        16  
+        17  
+        18  
+        19  
+        20  
+        21  
+        22  
+        23  
+        24  
+        25  
+  00003:01                            INDEX
+        02  Video Deposition of Dr. M. Christopher MacLaren Page No.
+        03  Direct Examination by Mr. Beattie                   5
+            Cross-Examination by Ms. Verona                    43
+        04  Redirect Examination by Mr. Beattie                52
+            Certificate of Oath                                59
+        05  Certificate of Reporter                            60
+        06  
+        07  
+        08  
+                                    EXHIBITS
+        09  
+                                  (None Marked)
+        10  
+        11  
+        12  
+        13  
+        14  
+        15  
+        16  
+        17  
+        18  
+        19  
+        20  
+        21  
+        22  
+        23  
+        24  
+        25  
+  00004:01      Video deposition taken before Brianna Williams, FPR
+        02  and Notary Public in and for the State of Florida at
+        03  Large in the above cause.
+        04                        - - - - - - -
+        05           THE VIDEOGRAPHER:  Good afternoon.  We are on
+        06      the record.  The time is 1:08 p.m. on
+        07      November 13th of 2025.  Private conversations and/or
+        08      attorney/client interactions should be held outside
+        09      the presence of the remote interface.  For the
+        10      purpose of creating a witness-only video recording,
+        11      the witness is being spotlighted or locked on all
+        12      video screens while in speaker view.  We ask that
+        13      the witness not remove the spotlight setting during
+        14      the deposition, as it may cause other participants
+        15      to appear on the final video rather than just the
+        16      witness.  For anyone who does not want the witness'
+        17      video to take up the large part of your screen, you
+        18      may click the gallery view button in the upper right
+        19      corner.
+        20           This is the video-recorded proceeding of
+        21      Dr. Christopher MacLaren taken in the matter of
+        22      Brandon Paige vs. Circle K Stores.  This proceeding
+        23      is being held remotely.  My name is Leah Mendez.
+        24      I'm the videographer on behalf of
+        25      U.S. Legal Support.  I am not related to any party
+  00005:01      in this action, nor am I financially interested in
+        02      the outcome.  The court reporter is Brianna Williams
+        03      on behalf of U.S. Legal Support.  Counsel will state
+        04      their appearances for the record, after which the
+        05      court reporter will enter the statement for remote
+        06      proceedings and swear in the witness.
+        07           MR. BEATTIE:  Kelly Beattie on behalf of the
+        08      plaintiff, Brandon Paige.
+        09           MS. VERONA:  Catherine Verona on behalf of the
+        10      defendant Circle K Stores.
+        11           THE REPORTER:  Do you solemnly swear that the
+        12      testimony you're about to give shall be the truth,
+        13      the whole truth, and nothing but the truth so help
+        14      you God?
+        15           THE WITNESS:  I do.
+        16  THEREUPON,
+        17                 DR. M. CHRISTOPHER MACLAREN
+        18  having first been duly sworn, was examined and testified
+        19  as follows:
+        20                     DIRECT EXAMINATION
+        21  BY MR. BEATTIE:
+        22      Q.   Good afternoon, Doctor.
+        23           Could you please introduce yourself to the
+        24  jury?
+        25      A.   Sure.  Dr. M. Christopher MacLaren, D.O.,
+  00006:01  Fellow of American Academy of Orthopaedic Surgeons.
+        02      Q.   And what type of doctor are you?
+        03      A.   So I am a dual-board-certified orthopedic
+        04  surgeon.  I have a certification in orthopedic surgery
+        05  where I did a military Army trauma postgraduate
+        06  fellowship training.  And I also am board certified as a
+        07  sports medicine orthopedic surgeon, which means that I
+        08  am dual board certified and I perform arthroscopy and
+        09  sports medicine surgery on extremities.  It's limited to
+        10  extremity work.  I do not do spine or hand surgery.
+        11      Q.   Okay.  So -- and I'm -- and I'm sure a lot of
+        12  the jury knows exactly what that is, what -- an
+        13  orthopedic surgeon, but if you could explain in general
+        14  terms what that means to be that type of doctor.  You
+        15  were explaining extremities and --
+        16      A.   Yeah.
+        17      Q.   -- arthroscopy.
+        18           Can you explain that in a little greater
+        19  detail, please, for the jury?
+        20      A.   Sure.  So an orthopedic surgeon basically is a
+        21  surgeon of the musculoskeletal system.  So it ranges
+        22  from anything from broken bones, torn muscles, torn
+        23  ligaments, torn tendons.  Layman's terms, if you see
+        24  someone with a fractured wrist or a fractured ankle,
+        25  that's what an orthopedic surgeon would then take care
+  00007:01  of, if you go through the emergency department for
+        02  soft-tissue injuries, such as a torn muscle or a torn
+        03  Achilles.  You're watching a football game.  You see
+        04  someone tear their knee up and they go through the
+        05  orthopedic surgeon department.  Then they have a
+        06  ligament surgery done, a reconstructive surgery.  So
+        07  we're basically human mechanics.  We -- we fix all of
+        08  the bones and soft-tissue structures of the body.
+        09      Q.   Thank you, Doctor.
+        10           And could you give the jury the benefit of your
+        11  educational background, please?
+        12      A.   So I graduated with honors cum laude from the
+        13  Ohio State University in Columbus, Ohio.  I went on to
+        14  go to medical school at Ohio University in Athens, Ohio,
+        15  where I graduated number one in my class, political
+        16  science.  I then went on to perform an orthopedic
+        17  surgery residency at Oklahoma State University in
+        18  Tulsa, Oklahoma.  I was awarded chief residency honors.
+        19  And with that, I scored on my written orthopedic surgery
+        20  boards 96 percent; my oral, 95 percent; my clinical
+        21  boards, 95 percent.  So with that, I was invited to
+        22  become a board examiner.
+        23           After my residency, I did postgraduate
+        24  fellowship training in sports medicine and arthroscopy
+        25  at University of Texas Southwestern in Dallas.  And then
+  00008:01  as an active-duty Army combat surgeon, I was then put
+        02  into trauma surgery training at the esteemed
+        03  Parkland Medical Center in Dallas, Texas, known for
+        04  where Kennedy went for the assassination.
+        05           I served my country for five years as an
+        06  active-duty combat surgeon.  Was deployed to Afghanistan
+        07  immediately after 9/11 with 101st Airborne where I
+        08  served as their combat surgeon.  Throughout my combat
+        09  surgery experience in Afghanistan, I was proud to say I
+        10  received a coveted combat medical badge and award from
+        11  General Tommy Franks for 21 combat saves in theater and,
+        12  also, a meritorious service medal for combat under fire
+        13  during Tora Bora during the hunt of Bin Laden.
+        14           So following my military career, I served my
+        15  five years.  I was honorably discharged and, during that
+        16  time, was board certified and then recertified ten years
+        17  later when I was in private practice.  I started private
+        18  practice in Tampa, Florida.  One of the proudest things
+        19  I did is -- after the military is I became a professor
+        20  of orthopedic surgery.  So since 2009 at USF and at
+        21  Nova Southeastern, USF being University of South Florida
+        22  and Nova Southeastern, I've been able to train medical
+        23  students and residents and preparing them for board
+        24  certification since then.  And I've been doing private
+        25  practice for now 25 years.
+  00009:01      Q.   Thank you, Doctor.
+        02           Can you explain to the jury what it means to be
+        03  board certified?
+        04      A.   So board certification is the highest standard
+        05  of any surgeon or doctor's profession.  It means that
+        06  you have met a higher standard of education and cases
+        07  that you performed as well as done the appropriate
+        08  academic curriculum.  In order to do that, you take a
+        09  written examination.  Mine, at least at the time, was
+        10  400 questions.  And you take an oral examination, which,
+        11  at the time, mine was eight hours, where you could be
+        12  asked anything from any realm of surgery, spine surgery,
+        13  pediatric surgery, tumor surgery.  And once you complete
+        14  those two phases, the third phase is two to three board
+        15  of examiners come in and watch you operate.  They watch
+        16  you operate whether they deem two or three cases.  And
+        17  once that they can deem that you are qualified, then and
+        18  only then do you get your board certification for the
+        19  first time.  Fairly rigorous.  Usually takes two after
+        20  your -- your residency is completed.
+        21           Following that, to maintain your board
+        22  certification, you have to take a recertification.  And
+        23  that is an exam every ten years, usually 200 to 250
+        24  questions on current -- keeping you current, current
+        25  principles, current orthopedic practices.  And so since
+  00010:01  then, I've been board certified twice in two different
+        02  certifications and recertified twice and passed them
+        03  all.
+        04      Q.   And so aside from your education -- now we're
+        05  in your work life.
+        06           Who do you currently work for and -- and for
+        07  how long?
+        08      A.   So currently I work for Complete Care Centers.
+        09  I am a 1099 hired consultant.  I started with them
+        10  August of 2018.
+        11      Q.   And in your role at Complete Care, you're a
+        12  board-certified surgeon is what I'm understanding and --
+        13      A.   Yes, sir.
+        14      Q.   -- specialize in orthopedic trauma and fracture
+        15  care?
+        16      A.   Trauma; fracture care; and sports medicine
+        17  surgery, which is minimally-invasive surgery of the
+        18  extremities, shoulder, elbow, and knee.
+        19      Q.   And you're the medical director at this
+        20  facility?
+        21      A.   Yes, sir.
+        22      Q.   And what -- what do those duties entail as a
+        23  medical director?
+        24      A.   So they entail -- I oversee the four what we
+        25  call medical hubs.  What that means is the medical hubs
+  00011:01  contain the specialists, spine surgeons, extremity
+        02  surgeons, pain management/interventional spine surgeons,
+        03  neurologists, basically the -- the clinical surgical
+        04  specialties.  So I oversee those and I do chart audits
+        05  and I do -- basically answer all questions from all of
+        06  our mid-level providers.  They have open access to ask
+        07  me questions on MRI reviews, patient care.  So I oversee
+        08  the mid-level providers.
+        09           My next hat I wear is education.  So I do all
+        10  of the educational, I guess, seminars for all of our new
+        11  employees, for all of our mid-level providers, medical
+        12  assistants, nurse-practitioners, physician assistants.
+        13  And the last one I do is I basically oversee --
+        14  basically as a fireman -- oversee any problems that may
+        15  arise within providers.  If providers have issues or
+        16  problems, they come to me.
+        17      Q.   Okay.  And so as the medical director, fair to
+        18  say that you oversee a lot of surgeries within the
+        19  clinic?
+        20      A.   I am the medical director for the extremities,
+        21  so I oversee those.  I don't oversee any of the spine
+        22  procedures.
+        23      Q.   And would you oversee knee surgeries on a
+        24  regular basis?
+        25      A.   Yes, sir.
+  00012:01      Q.   Now, Doctor, we're here with regard to one of
+        02  your patients, Brandon Paige.  My co-counsel and I
+        03  represent Brandon in a claim for an incident where he
+        04  had slipped and fell on a wet floor entering a gas
+        05  station, resulting in an injury.
+        06           Is that your understanding of the incident that
+        07  Brandon mentioned to you while you were treating him?
+        08      A.   Yes, sir.
+        09      Q.   And do you have medical records, reports, or
+        10  films with you today --
+        11      A.   Yes, sir.
+        12      Q.   -- regarding Brandon?
+        13      A.   Yes, sir.
+        14      Q.   So, Doctor, if you need to refer to those at
+        15  any point for your testimony today, please feel free to
+        16  do so.
+        17           Now, Doctor, could you please tell us exactly
+        18  what you brought in terms of records and other
+        19  information with respect to Brandon?
+        20      A.   So I have medical records that start with a new
+        21  patient intake that he had filled out.  It is filled out
+        22  in his own handwriting.  It's dated 6/17/2020.  It
+        23  corresponds with an initial evaluation that he had done
+        24  by -- I'm trying to see who did that.  On
+        25  June 23rd of 2020, he was seen for an initial eval by
+  00013:01  Judith Plummer-Morgan, nurse-practitioner.  And then he
+        02  was also seen before he saw me by our orthopedic
+        03  physician assistant, Sam Sabello, on 8/13 of 2020.
+        04           The rest of the records I have are an MRI of
+        05  his right knee dated 8/27/2020.  I have my initial
+        06  consultation dated 10/19/2020.  I have my operative
+        07  report from Orlando Center for Outpatient Surgery dated
+        08  3/30/2021.  I have a postop progress note dated
+        09  4/13/2021.  And that's it.
+        10      Q.   Would all those records and reports and films
+        11  refresh your recollection today regarding Brandon?
+        12      A.   Yes.
+        13      Q.   Are the records and films and reports kept in
+        14  the normal course of your business and medical practice
+        15  at Complete Care?
+        16      A.   Yes.
+        17      Q.   Were those same records and reports and films
+        18  made at or near the time Brandon was being treated at
+        19  Complete Care for --
+        20      A.   Yes.
+        21      Q.   -- his neck and knee surgeries -- oh, I'm
+        22  sorry.
+        23           It was neck and back and knee injuries and
+        24  pain?
+        25      A.   Yes.
+  00014:01      Q.   And is this regular practice for your office
+        02  and medical facilities where you perform surgeries to
+        03  make these types of records and reports?
+        04      A.   Yes.
+        05      Q.   And, Doctor, I -- it's obvious.  Obviously,
+        06  you -- you treated him while you were there.
+        07           But at one point, you did provide care and
+        08  treatment to Brandon, correct?
+        09      A.   Yes, sir.
+        10      Q.   And you just kind of walked through the dates
+        11  with us, but it sounds like you saw him on
+        12  October 19th of 2020; is that -- is that correct?
+        13      A.   Yes, sir.
+        14      Q.   And -- and what complaints did Brandon present
+        15  to you with at your practice?
+        16      A.   So Brandon stated his right knee was sharp,
+        17  tight.  His knee gets stiff.  It does not radiate.  His
+        18  biggest complaint was instability in the right knee.
+        19  His pain radiates anywhere from two at its best to seven
+        20  out of ten on its worst where ten is the worst on a pain
+        21  scale.  He has pain constantly.  It's worse with
+        22  walking, standing, turning, and moving.  It's improved
+        23  with stretching and wearing a knee brace.  He also
+        24  reports that his activities of daily living are affected
+        25  including household chores, childcare, driving,
+  00015:01  exercising, social activities, sleeping, occupational
+        02  activities.
+        03      Q.   And, Doctor, it's my understanding that you had
+        04  the benefit of reviewing diagnostic imaging of Brandon's
+        05  right knee; is that -- is that correct?
+        06      A.   Yes, sir.
+        07      Q.   And it's also my understanding you performed a
+        08  physical examination of Brandon when you met him for the
+        09  first time.
+        10      A.   Yes, sir.
+        11      Q.   And what were the findings after your consults
+        12  with him and reviewing the imaging and performing the
+        13  physical examinations of Brandon?
+        14      A.   So the findings were he had a significant,
+        15  quite large, what we call a horizontal cleavage tear of
+        16  his medial meniscus that encompassed about 50 percent of
+        17  the surface area of it.
+        18      Q.   And I thought I had read in the op report that
+        19  under the preop diagnosis and the postop diagnosis,
+        20  there's a second item where it's hypertrophic synovitis
+        21  right knee with a medial synovial plica band.
+        22           Can you explain --
+        23      A.   Right.
+        24      Q.   -- to the jury what that is?
+        25      A.   Yes, sir.  So whenever we have a meniscal
+  00016:01  injury or an injury to the knee, the normal lining,
+        02  think of it like a Saran Wrap lining inside the knee.
+        03  It's called synovial lining, so it's the lining that
+        04  secretes synovial fluid.  So all of our joints have
+        05  fluid in it.  So hypertrophic means expanding or getting
+        06  larger, hyper meaning larger.  Trophic means thickening.
+        07  So it's a larger thickened synovial lining that looks,
+        08  you know, like a big, thick, thick, carpet that
+        09  shouldn't be in there because it should be a thin
+        10  lining.  Instead, it's triple in size, quadruple in
+        11  size.
+        12           And a plica band is a band of tissue that runs
+        13  medially and it rubs.  It's like a friction rub.  So the
+        14  synovial lining gets so thick, if it's inside the knee
+        15  joint and it's tripling in size, now it's rubbing on the
+        16  knee area.  So that's part of the injury.  It's just
+        17  basically like a swollen synovial lining.  So we see
+        18  that when we put a camera in.  And once we see that, we
+        19  remove it because it's -- it's causing pain and it's
+        20  causing impingement.
+        21      Q.   And, Doctor, you diagnosed Brandon with a
+        22  complex -- a right knee complex tear of a medial
+        23  meniscus?
+        24      A.   Yes, sir.
+        25      Q.   And then we were just talking about the second
+  00017:01  diagnosis, right, with the -- the synovial -- the fluid
+        02  in the knee, right?
+        03      A.   The synovial lining is the thickening of the
+        04  lining, the thickening of the -- the lining tissue of
+        05  the knee.  Correct.
+        06      Q.   As to those diagnoses, is that opinion more
+        07  likely than not within a reasonable degree of medical
+        08  probability and certainty?
+        09      A.   Yes, sir.
+        10      Q.   In layman terms, Doctor, can you just describe
+        11  the nature and extent of the right knee injury that
+        12  Brandon sustained?
+        13      A.   Sure.  So it's a -- a twisting injury.  I'll
+        14  show you -- I kind of drew it out for you guys.  I
+        15  couldn't find my knee model.  But if we look at the
+        16  knee, this is the inside part of the knee.  If you reach
+        17  down and touch your knee on the inside part, it's called
+        18  the medial side.  So what he sustained was, in this
+        19  picture, he had split his meniscus cartilage.  The knee
+        20  has two kinds of cartilage in it.  It's got the covering
+        21  cartilage, like you see on the end of a chicken bone.
+        22  And then it's got the meniscal cartilage, which are the
+        23  little rubbery O-rings, because they look like O-rings,
+        24  but they're washers and they have two functions.  They
+        25  bumper the knee from being bone on bone and they act as
+  00018:01  a cup-and-saucer stabilizer.
+        02           So here's a better picture.  You can see the
+        03  O-ring here.  This is on the outside, the O-ring here on
+        04  the inside.  A normal medial meniscus looks like a
+        05  rubbery C shape, but Brandon Paige had split his like
+        06  this into a horizontal cleavage.  And then on top of
+        07  that, he had a flipped piece that came flipping out like
+        08  this, like a ton or kind of like a -- here it is.  It
+        09  was flipping back and forth causing a painful clicking
+        10  part.  And that's why we call it a complex tear because
+        11  it's torn into two different planes.
+        12      Q.   Doctor, did the medical records and the notes
+        13  that you reviewed pertaining to Brandon indicate that
+        14  the incident he reported to his doctors, including you,
+        15  was the slip and fall on a wet floor entering a gas
+        16  station on June 6th of 2020?
+        17      A.   That's correct.
+        18      Q.   And do you have an opinion as to what caused
+        19  the diagnosis that you came up with?
+        20      A.   So the configuration that you see there that I
+        21  drew out is a horizontal cleavage tear and that can't
+        22  happen without a traumatic event.  So that's a
+        23  bottle-cap effect or a twisting effect.  I wish I had my
+        24  knee model.  But if you think of the knee this way like
+        25  I drew on the picture, when you twist the knee like
+  00019:01  that, it tears that meniscus because it's a shear force.
+        02  So in light of the fact that at thirty -- let's see.
+        03  31 years old?  31 years old.  He has no degenerative
+        04  changes, no arthritic changes, no degenerative meniscus.
+        05  He has nothing that precludes him from having any kind
+        06  of arthritic changes in his knee and we can see that on
+        07  the pictures that I took.  And the only way to have a
+        08  split horizontal tear like that with a displaced
+        09  fragment is to have a traumatic event to that knee.  So
+        10  the traumatic event is a load and twist, like a bottle
+        11  cap twisting.
+        12      Q.   Is that opinion more likely than not within a
+        13  within a reasonable degree of medical probability and
+        14  certainty?
+        15      A.   Yes, sir.
+        16      Q.   And, Doctor, are you aware of any injury to
+        17  Brandon's right knee prior to this incident on 6/6/20?
+        18      A.   No.  He stated he had a left knee meniscus
+        19  repair in 2012 that he stated he did not have any injury
+        20  to the right knee prior.
+        21      Q.   Doctor, I want to talk about the treatment and
+        22  the surgery that you provided -- or Brandon.
+        23           Is the goal of your treatment that you provided
+        24  Brandon to relieve pain and maximize function?
+        25      A.   Yes, sir.
+  00020:01      Q.   And sometimes to accomplish that, does that
+        02  include surgical intervention?
+        03      A.   Yes, sir.  For -- for his injury and his size
+        04  tear, there was not a lot of options.  He was just going
+        05  to proceed -- or progressively get worse with the
+        06  configuration of this tear.  If you don't repair this,
+        07  you're going to lose almost all of your meniscus
+        08  cartilage over the next year or two.
+        09      Q.   So Brandon needed this surgery to relieve the
+        10  pain in his knee, repair it, and maximize function; is
+        11  that fair?
+        12      A.   Yes.  And I would also add to preserve the
+        13  knee's condition.  So what I mean by that is when we
+        14  repair a meniscus, we're preventing that meniscus from
+        15  future retear.  We're also preventing that meniscus from
+        16  not functioning correctly.  So the key wording we use
+        17  now in the academy of orthopedic sports medicine is
+        18  joint preservation techniques.  So truly, it's not now
+        19  that he'll reap the benefit of that joint preservation,
+        20  but it's 10, 15 years from now where we have saved that
+        21  meniscus and, thus, keeping the mechanics of the knee
+        22  from getting early degenerative osteoarthritic
+        23  conditions.  Not saying that he won't, but at least
+        24  we're giving it a fighting chance.
+        25      Q.   So moving into the -- the treatments, the
+  00021:01  surgery.  I -- I kind of broke them out into four
+        02  categories because that's kind of how the op report
+        03  set -- set forth the -- the procedures that were
+        04  performed.  The first one was -- I'm reading a right
+        05  knee arthroscopy.
+        06           Can you explain to us what that is?
+        07      A.   Correct.  So arthroscopy, just like what's
+        08  drawn on this picture, is basically taking a little
+        09  camera about the size of this pen on the end, taking a
+        10  little camera and making one small poke hole and putting
+        11  it right here and then taking an instrument with the
+        12  same poke hole and putting another little poke hole.
+        13  And you can see everything in the knee with that camera
+        14  and you can repair things.  You can visualize things
+        15  very well.  Even though these are black and white, I
+        16  think you can all see it.
+        17           So this is what it -- what I'm -- I'd be
+        18  looking at.  I'd be looking inside his knee with the
+        19  camera.  And then you can see here on this picture --
+        20  that's a great picture.  That's the horizontal cleavage
+        21  split tear I was talking about.  You can see where his
+        22  meniscus is split all the way.  And then this piece
+        23  right here is a free fragment.  See how it pops in and
+        24  out like a -- kind of a jack-in-the-box.  It's popping
+        25  back and forth and that's what's giving him all of
+  00022:01  that -- that incessant pain.  It's like a car hood
+        02  flipping over on itself.  So these are -- even though
+        03  they're black and white -- the color photos are great,
+        04  but if you see the black and white, you can kind of see
+        05  it from there.
+        06           So this is what I'm seeing with a tiny incision
+        07  and then I could fix things with mini instruments
+        08  through the knee there.  Oh.  Here's a great picture.
+        09  Here's that little jack-in-the-box piece I was talking
+        10  about.  It's not really a technical term, but you can
+        11  see here this whole fragment has popped back out from
+        12  where his knee was torn.  There's the horizontal piece,
+        13  but look how large this piece was where it flipped.  And
+        14  it's in the -- in between his two joint, the -- the part
+        15  of his joint, so this is -- this is a menace right here.
+        16      Q.   And that menace is what was causing him pain,
+        17  in your opinion?
+        18      A.   Pain and instability.  Correct.  That was
+        19  the -- that was the -- the main generator of pain and
+        20  instability and swelling.
+        21      Q.   So moving on to the second line item and the
+        22  procedures performed.
+        23           I'm -- I'm reading:  Right knee medial meniscus
+        24  repair using a suture anchor.
+        25           Now --
+  00023:01      A.   Right.
+        02      Q.   -- is that -- is that addressing the -- those
+        03  tears that you were just describing on the picture?
+        04      A.   Correct.  So this is a kind of a two phase.  So
+        05  the first phase is this piece is dead.  I mean, this
+        06  cartilage flap, this -- this chunky piece that's
+        07  flipping back and forth, you can't repair that.  It's a
+        08  dead piece of tissue.  So that gets resected.  That gets
+        09  removed.
+        10           And then the rest of the meniscus right here
+        11  where the split tear is, this is where I would insert a
+        12  meniscal repair anchor.  And you can't see it great
+        13  here, but there's a suture that repairs this.  And what
+        14  that does is it prevents that horizontal cleavage tear
+        15  from propagating.  It prevents it from getting bigger.
+        16  And it actually -- it actually stabilizes it.  So we've
+        17  done two things.  We've removed the bad part because we
+        18  can't do anything with it and then we've repaired the
+        19  good stuff that's left.
+        20      Q.   And then moving on to the third line item.
+        21  This is going to be a struggle for me to pronounce, but
+        22  I'll do my best.
+        23           Two-compartment synovectomy with excision of a
+        24  medial synovial plica band.
+        25      A.   You did good.  That's correct.
+  00024:01           So just like we talked about before, inside the
+        02  knee -- this is not -- if I had the color picture, it'd
+        03  be great.  But this is that medial synovial plica band,
+        04  so it's a thick band of tissue that sits there.  And you
+        05  can see here even in the black and white -- I feel like
+        06  I'm back in the '70s with TV.  Even in the black and
+        07  white, you can see it's rubbing on the condyle.  So when
+        08  you -- this is kind of a pain generator, too.
+        09           So you don't want to do a great job fixing the
+        10  meniscus and having the patient go, "Yeah.  It still
+        11  hurts me right here."  So this plica band is a direct
+        12  relation to a traumatic event, so we remove this when we
+        13  go in there.  So this is the before and then here's the
+        14  after.  You can see it's gone.  So that's kind of a --
+        15  that's kind of part of it, but you did good.
+        16      Q.   Well, the last one, I think, is going to be my
+        17  biggest challenge because it's a long one.  But --
+        18      A.   Yeah.
+        19      Q.   -- I'd like -- I'd like you to describe in
+        20  greater detail what, exactly, this -- this -- what you
+        21  performed here and this procedure that you performed in
+        22  Item 4, an intercondylar notch marrow stimulation
+        23  microfracture chondroplasty for a biological healing
+        24  response to the meniscal repair.
+        25      A.   Correct.  So kind of the standard of care in
+  00025:01  any meniscal repair is to add a marrow stimulation
+        02  technique.  Some people will inject platelet-rich plasma
+        03  directly to the repair.  The antiquated version was take
+        04  someone's blood products, make a clot out of it, and
+        05  then you insert the clot into the repair.  But an easier
+        06  way that we found, the guys at the
+        07  University of Pittsburgh found that if you just take an
+        08  area where the notch is -- so I'll show you on this
+        09  picture of where I am.
+        10           So I'm right here in the notch.  And there --
+        11  this is chock-full of really good marrow and the marrow
+        12  has got the stem cells and the healing cells for
+        13  everything that we want.  So what we do is we make
+        14  insertional points here and then the marrow free flows
+        15  down into those channels and it'll bathe the repair.
+        16  And marrow stimulation has shown two things:  One, it
+        17  helps in the repair of -- the speed of the repair, but
+        18  it also prevents retear.  So it's basically using --
+        19  it's using your own body's beautiful milieu of healing
+        20  factors in your marrow that's right there for the taking
+        21  and helping the healing response of that meniscus
+        22  repair.
+        23      Q.   Thank you, Doctor.
+        24           And I think you've already kind of covered it,
+        25  but you identified tears in the knee.  Significant
+  00026:01  tears, I think, is how you described it.
+        02           But that's what caused you to recommend and
+        03  perform these procedures to Brandon's right knee; is
+        04  that fair?
+        05      A.   Yes, sir.
+        06      Q.   Now, as for the procedures, are these invasive
+        07  medical procedures?
+        08      A.   So all surgery's invasive no matter what, even
+        09  if you have a toenail removed, so it's surgery.  The
+        10  fact that it's minimally invasive doesn't mean that it
+        11  doesn't have surgical risks.  They all have surgical
+        12  risks.  You can die.  You can have a blood clot.  You
+        13  can have a heart attack.  You can have a stroke.
+        14  There's many things.  You can get an infection.
+        15           Though the risks are small, though the risks
+        16  are minimal for minimally-invasive surgery, it's still
+        17  surgery.  And even though we make it look really cool
+        18  because we do it arthroscopically, it's still surgery.
+        19  I mean, you still have anesthesia and you still have
+        20  risks of lung infections, pneumonia, things like that.
+        21  So, I mean, like anything else, we -- we treat it as a
+        22  surgery even though it is minimally invasive.
+        23      Q.   And did Brandon lose parts of the knee -- his
+        24  knee anatomy as a result?
+        25      A.   He did.  He lost about 40 percent of his medial
+  00027:01  meniscus and that's that large chunky flap tear I showed
+        02  you that looked like a -- kind of a rusty gate popping
+        03  out or part of a tongue popping in and out, so yeah.  He
+        04  lost 40 percent of his meniscus.
+        05      Q.   As for the procedures, Doctor, I want you to
+        06  kind of describe what expected outcomes -- what are the
+        07  expected outcomes, if you could describe them for us?
+        08      A.   I will.  And I -- I've actually done a lecture
+        09  on this and I lectured it to my residents.  It's called
+        10  the young patient with the old knee.
+        11           So he's 31 now.  He's what we call -- and this
+        12  is the lean-in moment.  This is the lean-in for the
+        13  jury.  This is the lean-in part.  This is -- he's
+        14  meniscal deficient.  And what that means is on one side
+        15  of his knee, he's got a normal meniscus on the outside
+        16  part.  On the inside part of the knee, he's missing
+        17  40 percent, which means he's got a 60-percent meniscus
+        18  here and a 100-percent meniscus here.
+        19           So over the course of time -- look at the knee
+        20  right here.  Over the course of time, this part of the
+        21  knee where the 40 percent is gone will start to get
+        22  degenerative, get wear, get what we call post-traumatic
+        23  arthritis.  This side of the knee will be fine because
+        24  it's got a full bumper.  So like the pool ball on a
+        25  bumper on a pool table, this one doesn't have a full
+  00028:01  bumper.  This one's got about a 60-percent bumper.  So
+        02  over the course of time, not now, not next year, not the
+        03  year after, but when Brandon Paige is about 45ish, the
+        04  studies show 10 to 12 years, he will 100 percent have a
+        05  degenerative medial compartment of his knee with early
+        06  osteoarthritic changes.  That's a fact.
+        07      Q.   Doctor, what is the expected time frame for him
+        08  to recover from the actual procedures?
+        09      A.   So for meniscal repairs, most patients recover
+        10  in about 12 weeks.
+        11      Q.   And after that 12-week mark, are they bearing
+        12  weight regularly on the knee?
+        13      A.   So we let them bear weight 50 percent the first
+        14  three weeks and then we let them go full weight-bearing
+        15  in four weeks.  And then usually by twelve weeks,
+        16  they're able to have normal gait, meaning normal
+        17  walking.  They're able to do -- walk on treadmill.
+        18  They're able to do biking, swimming.  They're able to do
+        19  in-line activities.  What does that mean?  So walking in
+        20  line, riding a bike in line, but they're not allowed to
+        21  do pivoting activities for six months, pivoting being
+        22  racquetball, basketball, volleyball, pickleball, any of
+        23  these side-to-side activities.  And then we also protect
+        24  the repair with a brace for six months.
+        25      Q.   Doctor, you were describing Brandon's future
+  00029:01  and what you might expect in the future starting at 45
+        02  or around that age.
+        03           Would you expect there to be some limited range
+        04  of motion?
+        05      A.   Yes.
+        06      Q.   And pain would come along with that; is that
+        07  fair?
+        08      A.   Yes.
+        09      Q.   Will Brandon's knee ever be 100 percent back to
+        10  normal?
+        11      A.   No.  Normal ended when he tore his meniscus
+        12  out.
+        13      Q.   You -- have you ever experienced some patients
+        14  avoiding or doing less exercise and less -- being less
+        15  mobile due to this type of injury?
+        16      A.   All the time.
+        17      Q.   And does that carry on through life, 45 and
+        18  beyond?
+        19      A.   Throughout life until the inevitable happens
+        20  and they need some sort of replacement surgery.
+        21      Q.   Okay.  So before a replacement surgery, is
+        22  there -- well, follow-up care for the -- for the
+        23  procedures themselves, what do you -- what did -- what
+        24  would you have Brandon do or what did you have Brandon
+        25  do, I suppose?
+  00030:01      A.   So for right now, Brandon could be Brandon.  He
+        02  can wear a sports knee brace and he can go on with his
+        03  life.  He's only 31.
+        04           When Brandon starts to say in five to six
+        05  years, "My knee hurts when I jog.  My knee hurts when I
+        06  play with my kids.  My knee hurts when I am going to the
+        07  amusement park," and then you get an MRI on Brandon and
+        08  you see that his cartilage -- on his covering cartilage
+        09  is wearing down and it's starting to get degenerative,
+        10  then you start broaching the subject of biologics.  And
+        11  biologics are gel supplementation to the knee mixed with
+        12  platelet-rich plasma injections and the potential --
+        13  there's a new one out called fractionated adipose tissue
+        14  where you take some abdominal adipose tissue,
+        15  fractionate it down, and inject that into the knee.
+        16           And those all have been shown in studies to do
+        17  three things:  One, take away the symptomatology, i.e.,
+        18  pain; two, slow down the process of degenerative --
+        19  that's the buzzword, slow down the process of the
+        20  degenerative process; and number three, at least with
+        21  platelet-rich plasma, help some of the building
+        22  blocks -- and the gel injection, also.  Sorry -- help
+        23  some of the building blocks of the early degenerative
+        24  cartilage restore themselves.
+        25      Q.   As far as the development of any osteoarthritis
+  00031:01  or arthritis, is that at a much earlier age that
+        02  Brandon -- you would expect Brandon to potentially have
+        03  those symptoms from those types of conditions?
+        04      A.   Yes.
+        05           MS. VERONA:  Objection.  Outside the scope of
+        06      the record.
+        07           Sorry, Doctor.
+        08           THE WITNESS:  It's okay.  Yes.
+        09  BY MR. BEATTIE:
+        10      Q.   Let me -- let -- let me ask this in a little
+        11  different way.
+        12           Can Brandon's injuries in his right knee lead
+        13  to the development of osteoarthritis at an earlier age
+        14  than it would without the injury?
+        15      A.   100 percent.  Yes.  That's -- that's well
+        16  documented in over a thousand papers on post-traumatic
+        17  arthritis of the knee.  The big ones are meniscal
+        18  deficiency.  Once you're meniscal deficient of over
+        19  20 percent, it escalates.
+        20      Q.   And you had testified that Brandon was
+        21  40-percent deficient, correct?
+        22      A.   Yes.
+        23      Q.   What are some typical symptoms that he might
+        24  experience -- or you might expect him to experience in
+        25  the future?
+  00032:01      A.   Medial pain, meaning pain on the inside part of
+        02  his knee.  Number two is swelling.  Number three is the
+        03  feeling of giving way.  Number four is the deformity of
+        04  the knee starts to collapse on the inside parts of the
+        05  knee.  For him, would start to look a little more
+        06  bowlegged.  He'd start to see his knee bending inward.
+        07  The next one would be nighttime pain, pain that wakes
+        08  you up at night.  The next is difficulty getting up and
+        09  down out of a chair, climbing stairs, getting in and out
+        10  of a car, and up and down off a toilet seat.
+        11           So your activities of daily living get
+        12  compromised.  And then with that, because of the
+        13  degenerative joint line that is starting to wear and
+        14  tear on the cartilage, starting to look like shag carpet
+        15  or crab meat, it's getting all shaggy and degenerative,
+        16  you start to lose range of motion.
+        17      Q.   Would you expect these issues with the knee
+        18  that you're describing in the future, would you expect
+        19  them to cause any other issues to, say, his back or his
+        20  hip?
+        21      A.   So --
+        22           MS. VERONA:  Objection.  Outside the scope of
+        23      the records.
+        24           You can go ahead.
+        25           THE WITNESS:  You know, out of my realm.  We
+  00033:01      call it the kinetic chain.  More of a physiatrist
+        02      role, physical medicine and rehab role to comment on
+        03      that, but, I mean, the kinetic chain is what it is.
+        04      And if you have a degenerative knee on one side and
+        05      not on the other, intuitively -- and I don't know
+        06      from -- I don't have the -- the bandwidth to tell
+        07      you the papers out there or the research of it.  But
+        08      intuitively, I would think that it would cause a
+        09      disruption in the kinetic chain, which would then
+        10      cause associated probable hip pain, back pain.
+        11  BY MR. BEATTIE:
+        12      Q.   Would you expect him to compensate on his
+        13  good -- his good -- well, compensate for the injured leg
+        14  on his good leg?
+        15      A.   So it's hard to say.  It depends on when we
+        16  talk about compensate.  Like I said, it's -- it's not
+        17  now.  It's not next year.  It's not a year from now.
+        18  It's about ten years from now.  And then when you say
+        19  "compensate," usually it's not compensating.  It's
+        20  usually the other leg is -- is deficient and so you
+        21  start to see more of a limping and more of an antalgic
+        22  gait, meaning that they're not able to move the knee as
+        23  best as they can on their good knee.
+        24      Q.   Doctor, if Brandon's still experiencing some
+        25  symptoms or some pain in his knee, in your opinion, is
+  00034:01  it likely never going away?
+        02      A.   I -- you know, that's one of those questions
+        03  that when you are subjective and you have subjective
+        04  knee pain, you're going to have good days and bad days.
+        05  You're going to have some treatments.  Like I said, you
+        06  can have the gel injections, the PRP injections.  I
+        07  wouldn't recommend corticosteroid injections.  It's kind
+        08  of been -- been thrown out by our academy.
+        09           But you're going to have good days and bad
+        10  days.  The good days are going to come and then the bad
+        11  days are going to be if you went and walked around
+        12  Disney for eight hours with your kids, you're going to
+        13  have a bad day.
+        14      Q.   Would you classify Brandon's injuries from the
+        15  June 6, 2020, incident as being permanent injuries?
+        16      A.   Absolutely.
+        17      Q.   And I know you were alluding to some -- some
+        18  treatment in the future, potential treatment.
+        19           I'll just ask you straightaway:  Would Brandon
+        20  benefit from continued examinations and treatment
+        21  related to this right knee injury in the future?
+        22           MS. VERONA:  Objection.  Outside the scope of
+        23      the reports.
+        24           THE WITNESS:  No, absolutely.  Whatever -- you
+        25      know, the standard right now for meniscal deficiency
+  00035:01      on a young individual is he needs to be seen every
+        02      six months with imaging studies being x-rays and a
+        03      postoperative MRI done, minimal, at years one,
+        04      three, and five for a lot of reasons:  One, to look
+        05      at the cartilage; two, to look at the repair; and,
+        06      three, to start documenting any early -- what we
+        07      call chondromalacia, a fancy term for cartilage
+        08      thinning or wear of the articular cartilage leading
+        09      to early degenerative joint changes.
+        10           Some of the athletes I've seen have shown
+        11      dramatic arthritic changes within five years because
+        12      they're high-profile athletes and that's their job.
+        13      So even though they're meniscal deficient, they
+        14      still go back to playing NFL, NHL, or MLB.  And
+        15      because of that, they're at a higher risk, so their
+        16      risk factors of having a degenerative knee escalate
+        17      tenfold.  Depending on what he does -- I think at
+        18      the time we saw him, he may have been a driver for
+        19      DoorDash, but it depends on what his recreational
+        20      activities are.  If he is a highflier with
+        21      recreational activities, softball, basketball,
+        22      volleyball, he's going to increase his degenerative
+        23      changes, once again, two X or three X.
+        24  BY MR. BEATTIE:
+        25      Q.   Do you have an opinion as to whether you would
+  00036:01  expect future surgical intervention for Brandon's --
+        02           MS. VERONA:  Objection -- sorry.
+        03           THE WITNESS:  So knowing what I know --
+        04  BY MR. BEATTIE:
+        05      Q.   Let me ask that again.
+        06      A.   Okay.  Okay.
+        07      Q.   Doctor, do you have an opinion as to whether
+        08  you would expect future surgical intervention on the
+        09  right knee of Brandon as he gets older?
+        10           MS. VERONA:  Objection.  Outside the scope of
+        11      the reports.
+        12           You can go ahead, Doctor.
+        13           THE WITNESS:  So it's my professional opinion
+        14      within a reasonable degree of medical certainty that
+        15      Mr. Paige will need future surgical intervention,
+        16      whether that be joint resurfacing as a
+        17      minimally-invasive procedure and/or total knee
+        18      replacement arthroplasty, because being that much
+        19      meniscal deficiency, his knee is going to get wiped
+        20      out.  And I can tell you that, under oath, his
+        21      knee's going to be wiped out within 20 years.
+        22  BY MR. BEATTIE:
+        23      Q.   So based on that, Brandon may expect to get a
+        24  knee replacement in his 50's?
+        25      A.   Well, let's hope not.  I mean, we try to keep
+  00037:01  them -- there -- it's happened.  So let me -- let me
+        02  throw this out at you.
+        03           I say to my residents when I'm teaching them, I
+        04  say, "See all those total knee replacements on the
+        05  surgical board right there?"
+        06           And I'll say -- and they'll look at me and go,
+        07  "Yeah, Dr. MacLaren, I see.  There's about ten knee
+        08  replacements on the board for surgeries today."
+        09           I say, "Look at the ages.  Look at the ages.
+        10  One's 75."  I said, "One's 56."  I said, "Why would a
+        11  56-year-old need that knee replacement right now?"  And
+        12  they look at me and I say, "Remember the paper I gave
+        13  you on meniscal deficiency?  Where do you think those
+        14  total knees come from?"  So that's it.
+        15           So, I mean, we hope not, but is it a -- is it a
+        16  fact?  Yeah.  I mean, in those 50-year-olds that are
+        17  getting total knee replacements every day at
+        18  Tampa General and every other hospital, they've had a
+        19  traumatic event in their younger years because
+        20  degenerative knees just don't pop up and happen.  And --
+        21  and if you're that bad to have a total knee replacement
+        22  in your 50's, you had an antecedent event happen to you
+        23  in your 20's or your 30's.  Unfortunately, some of them
+        24  happen when they are in their teen ages.  They had a
+        25  meniscal tear as a teenager playing sports and now they
+  00038:01  have a total knee coming in their 50's.
+        02      Q.   As to a knee replacement, what -- what does
+        03  that surgery entail?
+        04           MS. VERONA:  Objection.  Outside the scope of
+        05      the report.
+        06           THE WITNESS:  So I don't do them.  I have done
+        07      them.  It's been 20 years since I've done them, but,
+        08      I mean, it's a large incision down the center of the
+        09      knee.  You basically resect parts of the knee and
+        10      you replace them with metal and plastic, from a
+        11      layman's perspective.
+        12  BY MR. BEATTIE:
+        13      Q.   Is the need for a knee replacement at an
+        14  earlier age common when someone has sustained injuries
+        15  such as Brandon?
+        16      A.   Yes.
+        17           MS. VERONA:  Objection.  Outside the scope of
+        18      the report.
+        19           Doctor --
+        20           MR. BEATTIE:  And --
+        21           MS. VERONA:  -- can you go ahead and answer it
+        22      again just so that, that way, the record's clear
+        23      later?
+        24           THE WITNESS:  Yes.
+        25  BY MR. BEATTIE:
+  00039:01      Q.   Doctor, let's assume Brandon won't need a knee
+        02  replacement in the future.  You were describing some
+        03  other, I guess, less-invasive procedure and I can't
+        04  recall exactly what you said.
+        05           But -- but what is that and can you describe
+        06  it?
+        07      A.   Sure.  So --
+        08           MS. VERONA:  Objection.  Outside the scope of
+        09      the report.
+        10           You can go ahead.
+        11           THE WITNESS:  Sure.  So I'm a sports med
+        12      surgeon, right?  I'm not a total knee surgeon.  So
+        13      I'm the guy who offers everything but knee
+        14      replacement surgery until it's necessary.  So when
+        15      someone's in that in-betweener category where it's
+        16      painful, painful, but it's not bad enough that you
+        17      want to do a knee replacement, I offer them three
+        18      things, right?
+        19           So the first thing we offer is
+        20      viscosupplementation.  It's like an oil change of
+        21      the knee.  It's called the gel injection.  You
+        22      probably heard of the gel.  Someone might've been
+        23      talking about it:  "Yeah.  They put the gel in my
+        24      knee."
+        25           So it's a gel injection.  It's basically the
+  00040:01      same components cartilage is made out of, hyaluronic
+        02      acid, chondroitin sulfate.  We inject that.  The
+        03      second additive to that is called platelet-rich
+        04      plasma.  You probably heard of all the athletes in
+        05      the NFL and they go and get PRP injections, PRP
+        06      here.  Tiger Woods had PRP.  Kobe Bryant used to get
+        07      PRP all the time.  But what it is, is we draw your
+        08      blood.  We spin it down and we take the healing
+        09      factors in your blood and we inject that into the
+        10      knee.  There's 3,500 studies on the knee and PRP out
+        11      there and it's the heavy lifter of knee pain and
+        12      pathology, meaning that it works as an analgesic to
+        13      knee pain and it also acts as a slowdown to
+        14      osteoarthritic changes that's been proven on
+        15      level-one studies.
+        16           The third modality is new and it's been
+        17      approved by Medicare and Medicaid, CMS.  It's called
+        18      fractionated adipose tissue.  They take a small
+        19      piece of adipose tissue from your abdomen.  They
+        20      fractionate it, meaning they take some of the cells
+        21      that are healing-factor cells and inject that into
+        22      the knee.  It has been shown in level-one studies
+        23      to, once again, slow down the progression of
+        24      osteoarthritic changes, decrease the pain, and
+        25      increase the functionality of the knee.  Those are
+  00041:01      the three biologics that I would offer.
+        02           A fourth modality, which I don't think is
+        03      necessary at the time, but you can do a cartilage
+        04      grafting.  Arthroscopically, you can put a camera in
+        05      the knee and you can find the divots and the defects
+        06      and then you can graft it with a new cartilage paste
+        07      that we have out on the market and you can graft the
+        08      defects with that.  Hopefully, that will work.  In
+        09      my hands, I've only done a handful of them, maybe
+        10      two.
+        11           And they're out there.  People are doing them.
+        12      There are cartilage grafting technique.  They have a
+        13      bunch of different names to them.  One's called
+        14      DeNovo.  The other one is called -- what is that one
+        15      called now?  Used to be called Carticel.  It's
+        16      basically a cartilage grafting technique where you
+        17      fill in the defects.  For layman's terms and for the
+        18      jury, it's like filling a pothole, potholes that are
+        19      in the knee, and you fill it with the cartilage
+        20      compound.
+        21           Those would be the precursors to anything --
+        22      that's -- that's (sic) would be what I would do as a
+        23      sports surgeon as opposed to a total knee surgeon.
+        24      But once again, the disclaimer on those is you have
+        25      to fit the category.  You can't have a wiped-out
+  00042:01      arthritic knee and expect those to work.
+        02  BY MR. BEATTIE:
+        03      Q.   Would you expect Brandon to fit the category
+        04  down the road in his 50's?
+        05      A.   I -- I -- if he came to see me in his 40's, I
+        06  would offer those four modalities.
+        07           I just remembered the last one's called
+        08  AutoCart, A-U-T-O Cart, as in autologous cartilage,
+        09  meaning we're using your own cartilage that we're
+        10  salvaging -- I'm sorry.  We're harvesting and we're
+        11  replacing it, robbing Peter to pay Paul, replacing it in
+        12  the areas of defect.  So those four modalities I would
+        13  definitely offer someone in their 40's or early 50's as
+        14  a sports surgeon.
+        15      Q.   Doctor, has all the treatment that you've
+        16  rendered Brandon Paige been reasonable?
+        17      A.   Yes, sir.
+        18      Q.   Has all that treatment that you've rendered to
+        19  Brandon Paige been necessary?
+        20      A.   Yes, sir.
+        21      Q.   And last question, Doctor:  Have all your
+        22  opinions you've given today been more likely than not
+        23  within a reasonable degree of medical certainty and
+        24  probability?
+        25      A.   Yes, sir.
+  00043:01           MR. BEATTIE:  Thank you, Doctor.
+        02                      CROSS-EXAMINATION
+        03  BY MS. VERONA:
+        04      Q.   Dr. MacLaren, I have some follow-up questions
+        05  for you.
+        06           My understanding based on the testimony you
+        07  just gave is that your only knowledge about the Circle K
+        08  incident is that Mr. Paige suffered a slip and fall due
+        09  to water on the floor; is that right?
+        10      A.   Correct.
+        11      Q.   You did not get any history from Mr. Paige of
+        12  this loading and twisting of the knee occurring in this
+        13  fall; isn't that true?
+        14      A.   Mr. Paige stated -- looking through the initial
+        15  evals.
+        16           He does not describe the mechanism of his
+        17  injury.
+        18      Q.   And did you have an opportunity to review his
+        19  deposition transcript?
+        20      A.   I did not.
+        21      Q.   Are you aware that in the deposition
+        22  transcript, he indicated that he action (sic) slipped
+        23  in -- he slipped and fell onto his back?  Are you aware
+        24  of that?
+        25      A.   I saw that in one of the notes, but I did not
+  00044:01  read his deposition.  But I think it says:  Initial
+        02  eval, the patient fell, impacted his back.
+        03      Q.   So as we sit here today, you have no evidence
+        04  to give this jury that Mr. Paige suffered a
+        05  load-and-twist injury to his knee in the fall at
+        06  Circle K; isn't that true?
+        07           MR. BEATTIE:  Form.
+        08           THE WITNESS:  No, that's not true.  The
+        09      evidence I have is seeing a split horizontal
+        10      cleavage tear with a displaced fragment that can
+        11      only happen from a twisting injury to the knee.  So
+        12      intuitively, as an educated individual, I'm
+        13      thinking, I mean, you don't -- you don't slip on the
+        14      water and go on your back.  You slip on the water,
+        15      twist your knee, then you go on your back because
+        16      there has to be -- there has to be a mechanism that
+        17      goes through the knee in order for you to go to
+        18      ground.  Just like when --
+        19  BY MS. VERONA:
+        20      Q.   Mr. Paige could've --
+        21      A.   -- someone says -- if someone -- like, I'm a
+        22  sports medicine guy, right?  I spend a lot of my time
+        23  out in the sidelines.
+        24           When someone says, "That guy took a hit up top
+        25  to the shoulder and then flew in the air and landed on
+  00045:01  his back," well, his back hurt, but his shoulder was
+        02  dislocated.  And so it's the cause and the effect.  So
+        03  it's not the fact that he fell on his back.  It's the
+        04  fact that he twisted his knee, then slipped, then fell
+        05  on his back.
+        06      Q.   Well, Mr. Paige could've suffered a twisting
+        07  injury to his knee in someplace or some other form other
+        08  than the fall at Circle K; isn't that right?
+        09           MR. BEATTIE:  Form.
+        10           THE WITNESS:  Well, maybe.  But I'll be honest
+        11      with -- there's no way he walked around with that
+        12      knee like that prior to that -- even if -- if he
+        13      injured that knee prior to the Circle K and he was
+        14      walking around on that knee for months before that,
+        15      I'd give him credit because that's a horrible
+        16      meniscus tear.
+        17  BY MS. VERONA:
+        18      Q.   Well, that's actually interesting that you
+        19  bring that up, because isn't it true that Mr. Paige's
+        20  first treatment for right knee complaints was at
+        21  Complete Care on August 14, 2020, two-and-a-half months
+        22  after the fall at Circle K occurred?
+        23      A.   That is his first visit.  Correct.
+        24      Q.   And isn't it true, then, that after you saw him
+        25  on October 19, 2020, Mr. Paige then waited at least
+  00046:01  another six months before undergoing the surgery in
+        02  March of 2021?
+        03      A.   Correct.  But the patients are not able to just
+        04  say -- it's not like fast food.
+        05           They can't say, "Hey.  Let's have my surgery
+        06  next week."  So there's a process.  And so that does not
+        07  surprise me that the process took that, particularly in
+        08  the world of personal injury and legal.
+        09      Q.   Well, in total, Mr. Paige was able to continue
+        10  walking on his knee for a total of ten months from the
+        11  time of this alleged fall at Circle K, June 6, 2020,
+        12  until he underwent surgery with you on March 30, 2021;
+        13  isn't that right?
+        14      A.   He might've been walking, but wasn't he
+        15  symptomatic the whole time?  According to the records,
+        16  he was with a seven out of ten on a pain scale the
+        17  entire time, affecting his activities of living.
+        18      Q.   And according to the history provided to you by
+        19  Mr. Paige, as documented in your medical records and as
+        20  documented in his sworn deposition testimony, he not
+        21  once gave a history of twisting his knee in the fall at
+        22  Circle K; isn't that right?
+        23      A.   I don't have it documented.  But once again,
+        24  I'm -- I'm going to say intuitively, as an educated
+        25  orthopedic surgeon who teaches this -- and I teach
+  00047:01  mechanisms of injury and I've lectured
+        02  nationally/internationally on knee meniscus injuries --
+        03  that's the only way that can happen.
+        04      Q.   Are you aware that Mr. Paige used to be
+        05  involved in what -- what he referred to as MMA, mixed
+        06  martial arts?
+        07      A.   I am not.
+        08      Q.   Okay.  And what -- are you familiar with mixed
+        09  martial arts?
+        10      A.   I was the team physician for mixed martial arts
+        11  Bellator for seven years while I had the D1 Sports Med
+        12  center.
+        13      Q.   And when you're performing the maneuvers in
+        14  mixed marshal arts, could you have twisted or rotated
+        15  your knee?
+        16      A.   Yes.
+        17      Q.   Are you aware that Mr. Paige was a
+        18  long-distance runner before the fall at Circle K in
+        19  June 2020?
+        20      A.   It's not in the records, but if you tell me
+        21  that, I would believe it.
+        22      Q.   Does long-distance running increase the stress
+        23  on people's knees?
+        24      A.   There's not any papers out there that show that
+        25  long-distance running is inhibitive or precursor to
+  00048:01  meniscal injury.
+        02      Q.   Are you aware that Mr. Paige is six feet, four
+        03  inches tall and weighs 270 pounds?
+        04      A.   That is what is written in his medical records.
+        05      Q.   Does height and weight play any role in
+        06  increasing stress in the knees?
+        07      A.   That's a great question because that's one of
+        08  my resident debates.  There's not any paper out there
+        09  that shows that body habitus or body morphology shows
+        10  any direct correlation to increased incidence of injury
+        11  to the knee.
+        12      Q.   So it's -- I didn't talk about injury.  I
+        13  just -- talking about stress on the knees.  It's your
+        14  testimony, then, to the ladies and gentlemen of the jury
+        15  that Mr. Paige being 270 pounds plays no role in wear
+        16  and tear or stress on his knees.
+        17      A.   That is correct.  And I look at it as I have
+        18  NFL linemen in my practice that are that same size that
+        19  do not have any pathology to their knee after a career
+        20  of five to ten years.
+        21      Q.   And likewise, it's your testimony to the ladies
+        22  and gentlemen of the jury that Mr. Paige will not have
+        23  any increased stress or wear and tear on his knees
+        24  because of long-distance running.
+        25      A.   He will not have any increase if he had a
+  00049:01  normal knee.  He will have an increase now because he's
+        02  40-percent meniscal deficient.  So running on normal
+        03  menisci, no.  Running on abnormal, deficient menisci,
+        04  yes.
+        05      Q.   And speaking of abnormal menisci, you're aware,
+        06  of course, that Mr. Paige had a meniscal tear in the
+        07  other knee, the left knee, back in 2012?
+        08      A.   That is in his records, correct, that he
+        09  stated.
+        10      Q.   And you did not review any MRIs or operative
+        11  reports following that injury, correct?
+        12      A.   We did ask for them.  He had no records and
+        13  nothing to share with us.
+        14      Q.   Okay.  Are you aware that Mr. Paige testified
+        15  under oath at his deposition that he suffered a meniscal
+        16  tear in 2012 not because of any particular trauma, but
+        17  just because of wear and tear?
+        18      A.   I did not review his deposition.
+        19      Q.   And that 2012 meniscal tear required surgery.
+        20           You're aware of that, right?
+        21      A.   Yes, ma'am.
+        22      Q.   Not every meniscal tear requires surgery; is
+        23  that right?
+        24      A.   That is correct.
+        25      Q.   But in this particular case with Mr. Paige,
+  00050:01  after ten months following the fall at Circle K, you did
+        02  do surgery in March 2021, correct?
+        03      A.   Correct.
+        04      Q.   And he had a good result from that surgery?
+        05      A.   To the best of my knowledge and what we have
+        06  discussed, yes.
+        07      Q.   You referred him to physical therapy following
+        08  the surgical procedure, correct?
+        09      A.   Correct.
+        10      Q.   And isn't it true that he was discharged from
+        11  physical therapy because he was not returning to the
+        12  therapy appointments?
+        13      A.   I do not have that knowledge.
+        14      Q.   Isn't it also true that Mr. Paige failed to
+        15  appear at two follow-up visits at Complete Care on
+        16  June 1, 2021, and June 16, 2021?
+        17      A.   To the best of my knowledge, he did not follow
+        18  up as scheduled after his first postop visit on
+        19  4/13 of '21.
+        20      Q.   So no one at Complete Care has seen Mr. Paige
+        21  related to his knee since April of 2021, correct?
+        22      A.   Correct.
+        23      Q.   And so you're not aware of his current medical
+        24  condition as it relates to the right knee?
+        25      A.   Not other than what I've read in his postop
+  00051:01  report, 4/13 of 2021.
+        02      Q.   And you are not aware of his current daily
+        03  activities or hobbies or sports that he's participating
+        04  in?
+        05      A.   I am not.
+        06      Q.   And I think you called it earlier a, quote,
+        07  lean-in moment for the jury when you were talking about
+        08  the condition that he may suffer from in the future.
+        09           So going back to that lean-in moment, you,
+        10  then, have not seen Mr. Paige since early 2021 and you
+        11  have no idea about his current medical condition; is
+        12  that right?
+        13      A.   That is correct, but what you're talking about
+        14  is incorrect.  The lean-in moment is the definition of
+        15  meniscal deficiency, not Mr. Paige's condition.  It's
+        16  the definition of him being 40-percent meniscal
+        17  deficient, has a 100-percent chance of him having a
+        18  degenerative knee in the next 20 years.  And that's well
+        19  documented in multiple level-one study papers throughout
+        20  the orthopedic literature.  That's the lean-in moment.
+        21      Q.   You'll agree with me that despite the lean-in
+        22  moment that he'll have 100 percent chance of having
+        23  degeneration, you have no idea whether or not Mr. Paige
+        24  would ever undergo any of the procedures that you've
+        25  laid out for the jury today, right?
+  00052:01      A.   I do not.  I have not seen it.
+        02      Q.   And, in fact, on -- on that same subject of
+        03  having no idea what he's going to undergo in the future,
+        04  he didn't -- he didn't -- didn't even complete the
+        05  postoperative recommendations that you gave him back in
+        06  2021, right?
+        07      A.   It appears so.
+        08           MS. VERONA:  All right.  I don't have any other
+        09      questions for you.  Thank you so much, Dr. MacLaren.
+        10           THE WITNESS:  You're welcome.
+        11                    REDIRECT EXAMINATION
+        12  BY MS. BEATTIE:
+        13      Q.   Doctor, just a few questions.  You mentioned
+        14  meniscal deficiency.
+        15           And you diagnosed Brandon Paige with a meniscal
+        16  deficiency, correct?
+        17      A.   Correct.
+        18      Q.   And is that because he has only 60 percent of
+        19  his meniscus at this time after the surgery?
+        20      A.   On his medial side, being the inside part of
+        21  his knee, he is currently -- has a repaired 60 percent
+        22  left of his medial meniscus.
+        23      Q.   So 40 percent of that is gone.
+        24      A.   Gone and never coming back.
+        25      Q.   And the reason why 40 percent of that is gone,
+  00053:01  is -- is it because he sustained an acute injury?
+        02      A.   Correct.
+        03      Q.   And you had testified earlier that this acute
+        04  injury that you identified from reviewing the records
+        05  during a physical examination of Brandon Paige, looking
+        06  at the MRIs, and talking to him, that he -- his meniscus
+        07  deficiency was a -- I'm sorry.  I lost my train of
+        08  thought.
+        09           All right.  Let's start over.
+        10           Doctor, you had testified that you diagnosed
+        11  him with a meniscal deficiency and that he had lost
+        12  40 percent of that portion of his meniscus, correct?
+        13      A.   Yes, sir.
+        14      Q.   And that the deficiency is because of the
+        15  surgery that you performed where you had to remove
+        16  portion of it, correct?
+        17      A.   Yes, sir.
+        18      Q.   And that portion was 40 percent?
+        19      A.   Yes, sir.
+        20      Q.   And the reason why you performed that surgery
+        21  was due to an acute injury, correct?
+        22      A.   Yes, sir.
+        23      Q.   And this is where I was going:  As far as the
+        24  acute injury, you identified this acute injury as an
+        25  injury that's -- that occurs because of a
+  00054:01  twisting-knee-type fall --
+        02      A.   That is correct.
+        03      Q.   -- or when you twist your knee, I suppose, is
+        04  what you -- I think you testified to.
+        05      A.   Correct.  The -- the configuration I showed
+        06  you, as I showed you before, with a horizontal split
+        07  tear with a piece that's fragmented out can only happen
+        08  with a twisting type and -- and what we call a shearing
+        09  mechanism.  It's got to shear that meniscus in a
+        10  twisting type.  When Ms. Verona alluded to the fact that
+        11  there are some that are not operative versus some that
+        12  are operative, if you have a radial tear that we call
+        13  nondisplaced -- so it's nondisplaced, it's not moving,
+        14  it's not doing anything -- you can leave those alone and
+        15  they'll be fine.  The ones that are displaced, that have
+        16  a piece, a chunk of it torn off and flipped over into
+        17  the joint, there's no alternative.  You have -- you have
+        18  to take care of that.  You have to surgically remove and
+        19  repair that.
+        20      Q.   And what you were just describing, that's what
+        21  you were showing in the pictures earlier in this
+        22  deposition, correct?
+        23      A.   Correct.  I showed it as a -- a black-and-white
+        24  piece.  And you can actually see -- I mean, this is a --
+        25  it's a beautiful image.  Bad for him, but good for the
+  00055:01  image.
+        02           This is a piece -- that -- that whole chunk,
+        03  that whole 40-percent piece is flipped over on itself
+        04  and sitting in the middle of his joint right there.  I
+        05  mean, that's -- that's a dead piece of tissue, but it's
+        06  still causing symptoms and so that has to go.  And then
+        07  the rest of it we have to repair to prevent this from
+        08  going from 60 percent left to 20 percent left.
+        09      Q.   And those injuries that you were just showing
+        10  us on the picture, could those injuries be caused by a
+        11  twisting knee event as you fall backwards?
+        12      A.   Yes.
+        13      Q.   Can you twist your knee falling backwards?
+        14      A.   Yes.
+        15      Q.   Is that a common way to twist your knee?
+        16      A.   Most of the time I see someone fall, they have
+        17  a knee injury to it because there's a twisting mechanism
+        18  going on with the knee.
+        19      Q.   Would you kind of describe that as a poor -- a
+        20  poor-splits-type mechanism?
+        21      A.   I would just describe it as a torsion or a
+        22  shear-force mechanism.
+        23      Q.   And as far as the recovery from the surgery
+        24  that -- that you performed, will a younger person
+        25  generally recover faster from that type --
+  00056:01           MS. VERONA:  Objection.  Outside -- sorry.
+        02      Outside the scope of direct -- or cross.
+        03           THE WITNESS:  I can't say that because you can
+        04      have a young, unhealthy person versus a 55-year-old,
+        05      super-fit person and the super-fit, healthy person
+        06      at 55's going to heal better.  It just depends on
+        07      your fitness level.  It depends on your motivation
+        08      and it depends on your genetics.  And so I can't
+        09      really put that in a box and say that.
+        10           MR. BEATTIE:  Okay.  All right, Doctor.  That's
+        11      all the questions I have for you.
+        12           THE REPORTER:  Are you -- any more questions?
+        13           Okay.  Is this a read or a waive?
+        14           MR. BEATTIE:  Oh.  I'm sorry.
+        15           We'll -- Doctor, do you want to waive or read?
+        16           THE WITNESS:  Oh.  I'll waive.
+        17           MS. VERONA:  Yeah.  It's for trial, so he
+        18      doesn't --
+        19           MR. BEATTIE:  Yeah.
+        20           MS. VERONA:  -- he doesn't do that.
+        21           THE REPORTER:  Okay.
+        22           MR. BEATTIE:  Yeah.  Sorry.  I -- I didn't know
+        23      what -- I couldn't hear you.  And I lost my train of
+        24      thought because of my chicken scratch on this page.
+        25           MS. VERONA:  Oh.  Listen.  It happens to all of
+  00057:01      us.  That's why I was, like, laughing because I'm
+        02      like, that's when you just got to be like, okay,
+        03      just start this whole thing over.
+        04           MR. BEATTIE:  Yeah, just start it over.  That's
+        05      the best part about the video.  I can just start it
+        06      over.
+        07           THE WITNESS:  Right.
+        08           MS. VERONA:  Just start this --
+        09           THE WITNESS:  Never know --
+        10           MS. VERONA:  -- shit over.
+        11           THE WITNESS:  That's right.
+        12           THE VIDEOGRAPHER:  Are we ready to go off the
+        13      record?
+        14           MR. BEATTIE:  Oh.  We're not off?
+        15           MS. VERONA:  Yes.
+        16           MR. BEATTIE:  Oh, my gosh.  We're on the
+        17      record.
+        18           THE VIDEOGRAPHER:  No.  Sorry.
+        19           Okay.  We are off the record.  The time is
+        20      2:10 p.m.  This concludes the deposition.
+        21           Will anyone be ordering the video?
+        22           MR. BEATTIE:  Not at this time.
+        23           THE VIDEOGRAPHER:  Okay.
+        24           THE REPORTER:  Would anyone like the
+        25      transcript?
+  00058:01           MR. BEATTIE:  Well, I probably don't need it
+        02      right now.
+        03           (Video deposition concluded at 2:11 p.m.)
+        04  
+        05  
+        06  
+        07  
+        08  
+        09  
+        10  
+        11  
+        12  
+        13  
+        14  
+        15  
+        16  
+        17  
+        18  
+        19  
+        20  
+        21  
+        22  
+        23  
+        24  
+        25  
+  00059:01                     CERTIFICATE OF OATH
+        02  STATE OF FLORIDA             )
+            COUNTY OF POLK               )
+        03  
+                I, the undersigned authority, certify that
+        04  DR. M. CHRISTOPHER MACLAREN personally appeared before
+            me and was duly sworn on NOVEMBER 13, 2025.
+        05  
+                WITNESS my hand and official seal this 23rd day of
+        06  November, 2025.
+        07  
+                              ___________________________
+        08                    Brianna Williams, FPR
+                              Notary Public - State of Florida
+        09                    My Commission No.:  HH648192
+                              Expires:  June 23, 2029
+        10  
+        11  
+        12  
+        13  
+        14  
+        15  
+        16  
+        17  
+        18  
+        19  
+        20  
+        21  
+        22  
+        23  
+        24  
+        25  
+  00060:01                   CERTIFICATE OF REPORTER
+        02  STATE OF FLORIDA               )
+            COUNTY OF POLK                 )
+        03  
+        04      I, BRIANNA WILLIAMS, Florida Professional Reporter,
+            do hereby certify that I was authorized to and did
+        05  stenographically report the video deposition of
+            DR. M. CHRISTOPHER MACLAREN; that a review of the
+        06  transcript WAS NOT requested; and that the foregoing
+            transcript, Pages 1 through 58, is a true record of my
+        07  stenographic notes.
+        08      I FURTHER CERTIFY that I am not a relative,
+            employee, or attorney, or counsel of any of the parties,
+        09  nor am I a relative or employee of any of the parties'
+            attorney or counsel connected with the action, nor am I
+        10  financially interested in the action.
+        11           DATED this 23rd day of November, 2025.
+        12  
+        13                ____________________________
+                              BRIANNA WILLIAMS, FPR
+        14                  FLORIDA PROFESSIONAL REPORTER
+        15  
+        16  
+        17  
+        18  
+        19  
+        20  
+        21  
+        22  
+        23  
+        24  
+        25  

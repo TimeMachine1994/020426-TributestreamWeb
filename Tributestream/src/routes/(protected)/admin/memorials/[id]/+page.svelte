@@ -17,14 +17,34 @@
 <div>
 	<div class="flex items-center justify-between">
 		<h1 class="text-2xl font-bold text-gray-900">Edit Memorial</h1>
-		<button
-			type="button"
-			onclick={() => (showDeleteModal = true)}
-			class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
-		>
-			Delete
-		</button>
+		<div class="flex gap-3">
+			<a
+				href="/schedule/{data.memorial.id}"
+				class="rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-400"
+			>
+				Open Calculator
+			</a>
+			<button
+				type="button"
+				onclick={() => (showDeleteModal = true)}
+				class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
+			>
+				Delete
+			</button>
+		</div>
 	</div>
+
+	<!-- Calculator Config Summary -->
+	{#if data.memorial.calculatorConfig}
+		<div class="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
+			<h3 class="text-sm font-semibold text-amber-800">Booking Summary</h3>
+			<div class="mt-2 flex items-center gap-4 text-sm text-amber-700">
+				<span>Status: <strong>{data.memorial.calculatorConfig.status}</strong></span>
+				<span>Total: <strong>${data.memorial.calculatorConfig.total?.toLocaleString()}</strong></span>
+				<span>Paid: <strong>{data.memorial.isPaid ? 'Yes' : 'No'}</strong></span>
+			</div>
+		</div>
+	{/if}
 
 	<form method="POST" action="?/update" use:enhance class="mt-8 max-w-2xl space-y-6">
 		{#if form?.error}
@@ -132,6 +152,44 @@
 				class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
 			/>
 			<label for="chatEnabled" class="text-sm font-medium text-gray-700">Enable chat</label>
+		</div>
+
+		<hr class="border-gray-200" />
+		<h3 class="text-lg font-semibold text-gray-900">Memorial Details</h3>
+
+		<div>
+			<label for="lovedOneName" class="block text-sm font-medium text-gray-700">Loved One's Name</label>
+			<input
+				type="text"
+				id="lovedOneName"
+				name="lovedOneName"
+				value={data.memorial.lovedOneName ?? ''}
+				placeholder="e.g., Jane Doe"
+				class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+			/>
+		</div>
+
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div>
+				<label for="directorFullName" class="block text-sm font-medium text-gray-700">Funeral Director Name</label>
+				<input
+					type="text"
+					id="directorFullName"
+					name="directorFullName"
+					value={data.memorial.directorFullName ?? ''}
+					class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+				/>
+			</div>
+			<div>
+				<label for="funeralHomeName" class="block text-sm font-medium text-gray-700">Funeral Home</label>
+				<input
+					type="text"
+					id="funeralHomeName"
+					name="funeralHomeName"
+					value={data.memorial.funeralHomeName ?? ''}
+					class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+				/>
+			</div>
 		</div>
 
 		<div class="flex gap-4">

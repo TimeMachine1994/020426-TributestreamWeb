@@ -1,0 +1,455 @@
+/* Tribute Theme System - Role-Based Portal Styling */
+
+:root {
+	/* Base Colors */
+	--fa-gold: #d5ba7f;
+	--fa-dark-gold: #8b7a4f;
+	--fa-black: #1a1a1a;
+	--fa-white: #ffffff;
+
+	/* Role-Specific Colors - Unified Gold Theme */
+	--owner-primary: #f59e0b;
+	--owner-secondary: #d97706;
+	--owner-accent: #fbbf24;
+
+	--funeral-director-primary: #d5ba7f;
+	--funeral-director-secondary: #c5aa6f;
+	--funeral-director-accent: #e5ca8f;
+
+	--family-member-primary: #b8a06b;
+	--family-member-secondary: #a8905b;
+	--family-member-accent: #c8b07b;
+
+	--viewer-primary: #e6d199;
+	--viewer-secondary: #d6c189;
+	--viewer-accent: #f6e1a9;
+
+	/* Neutral Colors */
+	--gray-50: #f9fafb;
+	--gray-100: #f3f4f6;
+	--gray-200: #e5e7eb;
+	--gray-300: #d1d5db;
+	--gray-400: #9ca3af;
+	--gray-500: #6b7280;
+	--gray-600: #4b5563;
+	--gray-700: #374151;
+	--gray-800: #1f2937;
+	--gray-900: #111827;
+}
+
+/* Theme Variants */
+.theme-aero-light {
+	--theme-primary: var(--fa-gold);
+	--theme-secondary: var(--fa-indigo);
+	--theme-background: var(--fa-white);
+	--theme-foreground: var(--fa-black);
+	--theme-glass-bg: rgba(255, 255, 255, 0.5);
+	--theme-glass-border: rgba(255, 255, 255, 0.7);
+	--theme-shadow: rgba(0, 0, 0, 0.1);
+}
+
+.theme-aero-dark {
+	--theme-primary: var(--fa-gold);
+	--theme-secondary: var(--fa-indigo);
+	--theme-background: var(--fa-black);
+	--theme-foreground: var(--fa-white);
+	--theme-glass-bg: rgba(42, 59, 142, 0.5);
+	--theme-glass-border: rgba(42, 59, 142, 0.7);
+	--theme-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Role-Based Theme Classes */
+.role-owner {
+	--role-primary: var(--owner-primary);
+	--role-secondary: var(--owner-secondary);
+	--role-accent: var(--owner-accent);
+	--role-gradient: linear-gradient(135deg, var(--owner-primary), var(--owner-secondary));
+	--role-bg-gradient: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
+}
+
+.role-funeral-director {
+	--role-primary: var(--funeral-director-primary);
+	--role-secondary: var(--funeral-director-secondary);
+	--role-accent: var(--funeral-director-accent);
+	--role-gradient: linear-gradient(
+		135deg,
+		var(--funeral-director-primary),
+		var(--funeral-director-secondary)
+	);
+	--role-bg-gradient: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1));
+}
+
+.role-family-member {
+	--role-primary: var(--family-member-primary);
+	--role-secondary: var(--family-member-secondary);
+	--role-accent: var(--family-member-accent);
+	--role-gradient: linear-gradient(
+		135deg,
+		var(--family-member-primary),
+		var(--family-member-secondary)
+	);
+	--role-bg-gradient: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+}
+
+.role-viewer {
+	--role-primary: var(--viewer-primary);
+	--role-secondary: var(--viewer-secondary);
+	--role-accent: var(--viewer-accent);
+	--role-gradient: linear-gradient(135deg, var(--viewer-primary), var(--viewer-secondary));
+	--role-bg-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1));
+}
+
+/* Base Styles */
+.theme-aero-light,
+.theme-aero-dark {
+	background-color: var(--theme-background);
+	color: var(--theme-foreground);
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease;
+}
+
+/* Component Classes */
+
+/* Glass Card */
+.glass-card {
+	background: var(--theme-glass-bg);
+	border-radius: 16px;
+	box-shadow: 0 4px 30px var(--theme-shadow);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid var(--theme-glass-border);
+	transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 40px var(--theme-shadow);
+}
+
+/* Role-Specific Glass Cards */
+.glass-card.role-themed {
+	background: var(--role-bg-gradient);
+	border: 1px solid var(--role-accent);
+}
+
+/* Buttons */
+.btn-primary {
+	background: var(--role-gradient, var(--theme-primary));
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 0.75rem 1.5rem;
+	font-weight: 600;
+	transition: all 0.2s ease;
+	cursor: pointer;
+}
+
+.btn-primary:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	filter: brightness(1.1);
+}
+
+.btn-secondary {
+	background: transparent;
+	color: var(--role-primary, var(--theme-primary));
+	border: 2px solid var(--role-primary, var(--theme-primary));
+	border-radius: 8px;
+	padding: 0.75rem 1.5rem;
+	font-weight: 600;
+	transition: all 0.2s ease;
+	cursor: pointer;
+}
+
+.btn-secondary:hover {
+	background: var(--role-primary, var(--theme-primary));
+	color: white;
+	transform: translateY(-1px);
+}
+
+/* Portal Header */
+.portal-header {
+	background: var(--role-bg-gradient, var(--theme-glass-bg));
+	border-radius: 16px;
+	padding: 2rem;
+	margin-bottom: 2rem;
+	backdrop-filter: blur(10px);
+	border: 1px solid var(--role-accent, var(--theme-glass-border));
+}
+
+.portal-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	background: var(--role-gradient, var(--theme-primary));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	margin-bottom: 0.5rem;
+}
+
+.portal-subtitle {
+	color: var(--theme-foreground);
+	opacity: 0.8;
+	font-size: 1.1rem;
+}
+
+/* Stats Cards */
+.stat-card {
+	background: var(--theme-glass-bg);
+	border-radius: 12px;
+	padding: 1.5rem;
+	backdrop-filter: blur(10px);
+	border: 1px solid var(--theme-glass-border);
+	transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 25px var(--theme-shadow);
+}
+
+.stat-value {
+	font-size: 2rem;
+	font-weight: 700;
+	color: var(--role-primary, var(--theme-primary));
+	margin-bottom: 0.5rem;
+}
+
+.stat-label {
+	color: var(--theme-foreground);
+	opacity: 0.7;
+	font-size: 0.9rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+/* Action Cards */
+.action-card {
+	background: var(--role-bg-gradient, var(--theme-glass-bg));
+	border-radius: 16px;
+	padding: 1.5rem;
+	backdrop-filter: blur(10px);
+	border: 1px solid var(--role-accent, var(--theme-glass-border));
+	transition: all 0.3s ease;
+	cursor: pointer;
+	text-decoration: none;
+	color: inherit;
+}
+
+.action-card:hover {
+	transform: translateY(-4px) scale(1.02);
+	box-shadow: 0 12px 40px var(--theme-shadow);
+	border-color: var(--role-primary, var(--theme-primary));
+}
+
+.action-card-icon {
+	width: 3rem;
+	height: 3rem;
+	background: var(--role-gradient, var(--theme-primary));
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 1rem;
+	color: white;
+}
+
+.action-card-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	color: var(--theme-foreground);
+}
+
+.action-card-description {
+	color: var(--theme-foreground);
+	opacity: 0.7;
+	font-size: 0.9rem;
+	line-height: 1.5;
+}
+
+/* Memorial Cards */
+.memorial-card {
+	background: var(--theme-glass-bg);
+	border-radius: 16px;
+	overflow: hidden;
+	backdrop-filter: blur(10px);
+	border: 1px solid var(--theme-glass-border);
+	transition: all 0.3s ease;
+}
+
+.memorial-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 12px 40px var(--theme-shadow);
+}
+
+.memorial-card-image {
+	width: 100%;
+	height: 12rem;
+	object-fit: cover;
+	background: var(--role-bg-gradient, linear-gradient(135deg, var(--gray-200), var(--gray-300)));
+}
+
+.memorial-card-content {
+	padding: 1.5rem;
+}
+
+.memorial-card-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	color: var(--theme-foreground);
+}
+
+.memorial-card-meta {
+	color: var(--theme-foreground);
+	opacity: 0.6;
+	font-size: 0.875rem;
+	margin-bottom: 1rem;
+}
+
+.memorial-card-actions {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+/* Form Elements */
+.form-input {
+	background: var(--theme-glass-bg);
+	border: 1px solid var(--theme-glass-border);
+	border-radius: 8px;
+	padding: 0.75rem 1rem;
+	color: var(--theme-foreground);
+	backdrop-filter: blur(10px);
+	transition: all 0.2s ease;
+	width: 100%;
+}
+
+.form-input:focus {
+	outline: none;
+	border-color: var(--role-primary, var(--theme-primary));
+	box-shadow: 0 0 0 3px rgba(var(--role-primary), 0.1);
+}
+
+.form-label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 600;
+	color: var(--theme-foreground);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-fade-in-up {
+	animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+
+.animate-pulse {
+	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.animate-spin {
+	animation: spin 1s linear infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.portal-title {
+		font-size: 2rem;
+	}
+
+	.portal-header {
+		padding: 1.5rem;
+	}
+
+	.action-card {
+		padding: 1rem;
+	}
+
+	.stat-card {
+		padding: 1rem;
+	}
+}
+
+/* Utility Classes */
+.text-role-primary {
+	color: var(--role-primary, var(--theme-primary));
+}
+
+.bg-role-gradient {
+	background: var(--role-gradient, var(--theme-primary));
+}
+
+.border-role-primary {
+	border-color: var(--role-primary, var(--theme-primary));
+}
+
+.shadow-role {
+	box-shadow: 0 4px 20px rgba(var(--role-primary), 0.2);
+}
+
+/* Loading States */
+.loading-skeleton {
+	background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-300) 50%, var(--gray-200) 75%);
+	background-size: 200% 100%;
+	animation: loading 1.5s infinite;
+	border-radius: 4px;
+}
+
+@keyframes loading {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+/* Error States */
+.error-card {
+	background: rgba(239, 68, 68, 0.1);
+	border: 1px solid rgba(239, 68, 68, 0.3);
+	border-radius: 12px;
+	padding: 1rem;
+	color: #dc2626;
+}
+
+.success-card {
+	background: rgba(34, 197, 94, 0.1);
+	border: 1px solid rgba(34, 197, 94, 0.3);
+	border-radius: 12px;
+	padding: 1rem;
+	color: #16a34a;
+}

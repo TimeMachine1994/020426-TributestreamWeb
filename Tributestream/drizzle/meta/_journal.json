@@ -8,6 +8,13 @@
       "when": 1770770265333,
       "tag": "0000_lucky_gideon",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1771527849013,
+      "tag": "0001_eager_gateway",
+      "breakpoints": true
     }
   ]
 }

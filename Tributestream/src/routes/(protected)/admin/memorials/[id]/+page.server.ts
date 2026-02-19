@@ -3,12 +3,10 @@ import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { getMemorialById } from '$lib/server/services/memorial.service';
 
 export const load: PageServerLoad = async ({ params }) => {
-	const [memorial] = await db
-		.select()
-		.from(table.memorial)
-		.where(eq(table.memorial.id, params.id));
+	const memorial = await getMemorialById(params.id);
 
 	if (!memorial) {
 		throw error(404, 'Memorial not found');
@@ -40,6 +38,9 @@ export const actions: Actions = {
 		const assignedVideographerId = formData.get('assignedVideographerId') as string | null;
 		const status = formData.get('status') as string;
 		const chatEnabled = formData.get('chatEnabled') === 'on';
+		const lovedOneName = formData.get('lovedOneName') as string | null;
+		const directorFullName = formData.get('directorFullName') as string | null;
+		const funeralHomeName = formData.get('funeralHomeName') as string | null;
 
 		if (!title || !slug) {
 			return fail(400, { error: 'Title and slug are required' });
@@ -62,6 +63,9 @@ export const actions: Actions = {
 					status: status as table.MemorialStatus,
 					assignedVideographerId: assignedVideographerId || null,
 					chatEnabled,
+					lovedOneName: lovedOneName || null,
+					directorFullName: directorFullName || null,
+					funeralHomeName: funeralHomeName || null,
 					updatedAt: new Date()
 				})
 				.where(eq(table.memorial.id, params.id));
